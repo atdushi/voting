@@ -4,6 +4,18 @@ VALUES ('User', 'user@yandex.ru', '{noop}password'),
        ('Guest', 'guest@gmail.com', '{noop}guest');
 
 INSERT INTO USER_ROLE (role, user_id)
-VALUES ('USER', 1),
-       ('ADMIN', 2),
-       ('USER', 2);
+VALUES ('USER', 100000),
+       ('ADMIN', 100001),
+       ('USER', 100002);
+
+INSERT INTO restaurant (name)
+VALUES ('ТОКИО-CITY'),
+       ('Bahroma');
+
+INSERT INTO dish (name, price, restaurant_id, date)
+VALUES ('лазанья', 300.5, 100003, '2020-01-30'),
+       ('шашлык', 400.0, 100004, '2020-01-30');
+
+INSERT INTO vote (user_id, restaurant_id, created)
+VALUES (100000, 100003, '2020-01-30 11:00:00'),
+       (100001, 100003, '2020-01-30 11:10:00');
