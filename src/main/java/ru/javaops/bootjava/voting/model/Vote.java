@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.user.model;
+package ru.javaops.bootjava.voting.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 import ru.javaops.bootjava.common.model.BaseEntity;
+import ru.javaops.bootjava.user.model.User;
 
 import java.time.LocalDateTime;
 

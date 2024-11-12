@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.user.model;
+package ru.javaops.bootjava.voting.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
