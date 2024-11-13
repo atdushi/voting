@@ -10,14 +10,16 @@ import java.util.stream.Collectors;
 public class RestaurantUtil {
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {
-        return restaurants.stream().map(RestaurantUtil::createTo).collect(Collectors.toList());
+        return restaurants.stream()
+                .map(RestaurantUtil::createTo)
+                .collect(Collectors.toList());
     }
 
     public static RestaurantTo createTo(Restaurant restaurant) {
         return new RestaurantTo(
                 restaurant.getId(),
-                restaurant.getName()
-                //, DishUtil.getTos(restaurant.getDishes())
+                restaurant.getName(),
+                DishUtil.getTos(restaurant.getDishes())
         );
     }
 

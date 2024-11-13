@@ -19,12 +19,12 @@ public class Restaurant extends NamedEntity {
     @Setter
 //    @OneToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
-    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Dish> dishes;
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     //https://struchkov.dev/blog/ru/hibernate-multiple-bag-fetch-exception/
     private Set<Vote> votes;
 
@@ -34,12 +34,5 @@ public class Restaurant extends NamedEntity {
 
     public List<Dish> getDishes() {
         return dishes == null ? Collections.emptyList() : dishes.stream().toList();
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "name='" + name + '\'' +
-                '}';
     }
 }

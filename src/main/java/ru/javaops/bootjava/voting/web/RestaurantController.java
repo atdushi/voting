@@ -8,12 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javaops.bootjava.user.UsersUtil;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
-import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
-import ru.javaops.bootjava.user.to.UserTo;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.net.URI;
@@ -31,9 +28,10 @@ public class RestaurantController {
     protected RestaurantRepository repository;
 
     @GetMapping
-    public List<Restaurant> getAll() {
+    public List<RestaurantTo> getAll() {
         log.info("getAll");
-        return repository.findAll();
+        List<Restaurant> withDishes = repository.findAllWithDishes();
+        return RestaurantUtil.getTos(withDishes);
     }
 
     @DeleteMapping
