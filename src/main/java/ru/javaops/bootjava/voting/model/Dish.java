@@ -21,7 +21,7 @@ public class Dish extends NamedEntity {
 
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
