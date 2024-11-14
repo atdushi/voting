@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
+import ru.javaops.bootjava.voting.repository.VoteRepository;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
-import ru.javaops.bootjava.voting.to.VoteTo;
 
 import java.net.URI;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
@@ -30,6 +30,9 @@ public class RestaurantController {
 
     @Autowired
     protected RestaurantRepository repository;
+
+    @Autowired
+    protected VoteRepository voteRepository;
 
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id) {
@@ -84,9 +87,13 @@ public class RestaurantController {
     @PostMapping(value = "/{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void vote(@PathVariable int id, @Valid @RequestBody Integer userId) {
-        log.info("vote resturant {} user {}", id, userId);
+        log.info("vote restaurant {} user {}", id, userId);
 
-        //todo: check time
-
+        if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
+            //todo: add/refresh
+            voteRepository.save(new Vote())
+        } else {
+            //todo: too late
+        }
     }
 }

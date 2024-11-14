@@ -9,12 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.voting.DishUtil;
-import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Dish;
-import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
-import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.net.URI;
 import java.util.List;
