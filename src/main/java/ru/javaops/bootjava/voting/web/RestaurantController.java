@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
@@ -27,6 +28,11 @@ public class RestaurantController {
 
     @Autowired
     protected RestaurantRepository repository;
+
+    @GetMapping("/{id}")
+    public RestaurantTo get(@PathVariable int id) {
+        return RestaurantUtil.createTo(repository.findById(id).orElseThrow());
+    }
 
     @GetMapping
     public List<RestaurantTo> getAll() {
@@ -64,5 +70,13 @@ public class RestaurantController {
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void update(@RequestBody @Valid RestaurantTo restaurantTo) {
+        log.info("update {}", restaurantTo);
+        repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
     }
 }
