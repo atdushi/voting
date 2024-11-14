@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.voting.RestaurantUtil;
@@ -30,8 +31,23 @@ public class RestaurantController {
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("getAll");
-        List<Restaurant> withDishes = repository.findAllWithDishes();
-        return RestaurantUtil.getTos(withDishes);
+        List<Restaurant> withDishes = repository.findAllWithDishesAndVotes();
+        return RestaurantUtil.getTos(withDishes, true, true);
+    }
+
+    @GetMapping("/order-by-rating-desc")
+    public List<RestaurantTo> getAllByRating() {
+        log.info("getAll by rating");
+        List<RestaurantTo> all = repository.findAllByRatingDesc();
+        return RestaurantUtil.unproxy(all);
+    }
+
+    @GetMapping("/top-ranked")
+    @Transactional
+    public RestaurantTo getTopRanked() {
+        log.info("getTopRanked");
+        Restaurant firstByRatingDesc = repository.findFirstByRatingDesc();
+        return RestaurantUtil.createTo(firstByRatingDesc);
     }
 
     @DeleteMapping

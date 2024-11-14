@@ -3,9 +3,10 @@ package ru.javaops.bootjava.voting;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.to.DishTo;
-import ru.javaops.bootjava.voting.to.RestaurantTo;
+import ru.javaops.bootjava.voting.to.RestaurantToImpl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +20,17 @@ public class DishUtil {
 
     public static DishTo createTo(Dish dish) {
         Restaurant restaurant = dish.getRestaurant();
+
         return new DishTo(
                 dish.getId(),
                 dish.getName(),
-                new RestaurantTo(restaurant.getId(), restaurant.getName(), null));
+
+                new RestaurantToImpl(
+                        restaurant.getId(),
+                        restaurant.getName(),
+                        Collections.emptyList(),
+                        restaurant.getVotes().size()
+                )
+        );
     }
 }

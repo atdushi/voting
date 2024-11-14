@@ -35,4 +35,8 @@ public class Restaurant extends NamedEntity {
     public List<Dish> getDishes() {
         return dishes == null ? Collections.emptyList() : dishes.stream().toList();
     }
+
+    public List<Vote> getVotes() {
+        return votes == null ? Collections.emptyList() : votes.stream().toList();
+    }
 }
