@@ -35,6 +35,12 @@ public class MatcherFactory {
                 (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(e));
     }
 
+    public static <T> Matcher<T> usingComparingOnlyFieldsComparator(Class<T> clazz, String... fieldsToCompare) {
+        return usingAssertions(clazz,
+                (a, e) -> assertThat(a).usingRecursiveComparison().comparingOnlyFields(fieldsToCompare).isEqualTo(e),
+                (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorOnFields(fieldsToCompare).isEqualTo(e));
+    }
+
     public static class Matcher<T> {
         private final Class<T> clazz;
         private final BiConsumer<T, T> assertion;

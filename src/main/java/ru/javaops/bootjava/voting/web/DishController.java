@@ -3,10 +3,7 @@ package ru.javaops.bootjava.voting.web;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.javaops.bootjava.voting.DishUtil;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.repository.DishRepository;
@@ -35,5 +32,10 @@ public class DishController {
         log.info("getAll");
         List<Dish> all = repository.findAll();
         return DishUtil.getTos(all);
+    }
+
+    @GetMapping("/{id}")
+    public DishTo get(@PathVariable int id) {
+        return DishUtil.createTo(repository.findById(id).orElseThrow());
     }
 }
