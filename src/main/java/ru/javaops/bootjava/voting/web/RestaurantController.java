@@ -12,8 +12,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
+import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
+import ru.javaops.bootjava.voting.to.VoteTo;
 
 import java.net.URI;
 import java.util.List;
@@ -56,10 +58,10 @@ public class RestaurantController {
         return RestaurantUtil.createTo(firstByRatingDesc);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(Restaurant restaurant) {
-        repository.delete(restaurant);
+    public void delete(@PathVariable int id) {
+        repository.deleteById(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -72,11 +74,19 @@ public class RestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void update(@RequestBody @Valid RestaurantTo restaurantTo) {
+    public void update(@PathVariable int id, @RequestBody @Valid RestaurantTo restaurantTo) {
         log.info("update {}", restaurantTo);
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
+    }
+
+    @PostMapping(value = "/{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void vote(@PathVariable int id, @Valid @RequestBody Integer userId) {
+        log.info("vote resturant {} user {}", id, userId);
+
+        //todo: check time
+
     }
 }

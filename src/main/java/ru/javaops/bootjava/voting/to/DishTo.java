@@ -10,8 +10,11 @@ public class DishTo extends NamedTo {
 
     RestaurantTo restaurant;
 
-    public DishTo(Integer id, String name, RestaurantTo restaurant) {
+    Double price;
+
+    public DishTo(Integer id, String name, Double price, RestaurantTo restaurant) {
         super(id, name);
+        this.price = price;
         this.restaurant = restaurant;
     }
 }

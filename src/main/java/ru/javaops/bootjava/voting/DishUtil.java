@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting;
 
+import jakarta.validation.Valid;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.to.DishTo;
@@ -24,6 +25,7 @@ public class DishUtil {
         return new DishTo(
                 dish.getId(),
                 dish.getName(),
+                dish.getPrice(),
 
                 new RestaurantToImpl(
                         restaurant.getId(),
@@ -32,5 +34,9 @@ public class DishUtil {
                         restaurant.getVotes().size()
                 )
         );
+    }
+
+    public static Dish createNewFromTo(DishTo dishTo) {
+        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice());
     }
 }
