@@ -15,6 +15,7 @@ import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
@@ -31,7 +32,7 @@ public class DishController {
     @GetMapping("/by-restaurant")
     public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId) {
         log.info("getAll for restaurant {}", restaurantId);
-        List<Dish> all = repository.getAllByRestaurant(RestaurantUtil.createNewFromId(restaurantId));
+        List<Dish> all = repository.getAllByRestaurant(RestaurantUtil.createNewFromId(restaurantId), LocalDate.of(2020, 1, 30));
         return DishUtil.getTos(all);
     }
 

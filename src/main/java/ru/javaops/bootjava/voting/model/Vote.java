@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import ru.javaops.bootjava.common.model.BaseEntity;
 import ru.javaops.bootjava.user.model.User;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -27,18 +27,18 @@ public class Vote extends BaseEntity {
 
     @Getter
     @Setter
-    @Column(name = "created", nullable = false, columnDefinition = "timestamp default now()")
-    private LocalDateTime created;
+    @Column(name = "created", nullable = false, columnDefinition = "date default now()")
+    private LocalDate created;
 
     public Vote(User user, Restaurant restaurant) {
-        this(null, user, restaurant, LocalDateTime.now());
+        this(null, user, restaurant, LocalDate.now());
     }
 
     public Vote(Integer id, User user, Restaurant restaurant) {
-        this(id, user, restaurant, LocalDateTime.now());
+        this(id, user, restaurant, LocalDate.now());
     }
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDateTime created) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate created) {
         this.id = id;
         this.user = user;
         this.restaurant = restaurant;

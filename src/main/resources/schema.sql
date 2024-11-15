@@ -48,8 +48,8 @@ CREATE TABLE vote
     id            INTEGER DEFAULT NEXT VALUE FOR GLOBAL_SEQ PRIMARY KEY,
     user_id       INTEGER                 NOT NULL,
     restaurant_id INTEGER                 NOT NULL,
-    created       TIMESTAMP DEFAULT now() NOT NULL,
+    created       DATE DEFAULT now() NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
 );
--- CREATE UNIQUE INDEX vote_unique_restaurant_idx ON vote (user_id, restaurant_id, created);
+CREATE UNIQUE INDEX vote_unique_restaurant_idx ON vote (user_id, restaurant_id, created);

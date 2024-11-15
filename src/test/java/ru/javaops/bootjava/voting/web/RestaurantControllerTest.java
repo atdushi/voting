@@ -1,11 +1,12 @@
 package ru.javaops.bootjava.voting.web;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.bootjava.AbstractControllerTest;
+import ru.javaops.bootjava.user.UserTestData;
+import ru.javaops.bootjava.voting.VoteTestData;
 import ru.javaops.bootjava.voting.VoteUtil;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.bootjava.voting.RestaurantTestData.*;
 import static ru.javaops.bootjava.voting.web.RestaurantController.REST_URL;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RestaurantControllerTest extends AbstractControllerTest {
 
@@ -29,19 +31,19 @@ public class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void getByUserIdAndRestaurantId() throws Exception {
-        Vote byUserIdAndRestaurantId = voteRepository.getByUserIdAndRestaurantId(100000, 100003);
-
+        Vote byUserIdAndRestaurantId = voteRepository.getByUserIdAndRestaurantId(UserTestData.USER_ID, TOKYO_CITY_ID, VoteTestData.VOTE_DATE);
+        assertNotNull(byUserIdAndRestaurantId);
     }
 
     @Test
     void checkExists() throws Exception {
         Vote vote = VoteUtil.createNew(100000, 100003);
         boolean b = voteRepository.checkExists(vote);
-        Assertions.assertTrue(b);
+        assertTrue(b);
 
         vote = VoteUtil.createNew(100000, 100004);
         b = voteRepository.checkExists(vote);
-        Assertions.assertFalse(b);
+        assertFalse(b);
     }
 
     @Test

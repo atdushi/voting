@@ -18,7 +18,7 @@ import ru.javaops.bootjava.voting.repository.VoteRepository;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -92,12 +92,13 @@ public class RestaurantController {
     public ResponseEntity<Vote> vote(@PathVariable int id, @Valid @RequestBody Integer userId) {
         log.info("vote restaurant {} user {}", id, userId);
 
-        if (LocalTime.now().isBefore(TIME_LIMIT)) {
-            Vote vote = voteRepository.getByUserIdAndRestaurantId(userId, id);
+        if (!LocalTime.now().isBefore(TIME_LIMIT)) {
+            //todo: replace with now
+            Vote vote = voteRepository.getByUserIdAndRestaurantId(userId, id, LocalDate.of(2020, 1, 30));
             if (vote == null) {
                 vote = VoteUtil.createNew(userId, id);
             }
-            vote.setCreated(LocalDateTime.now());
+            vote.setCreated(LocalDate.now());
             voteRepository.save(vote);
             return ResponseEntity.ok(vote);
         } else {

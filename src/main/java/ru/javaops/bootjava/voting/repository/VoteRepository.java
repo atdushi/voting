@@ -9,6 +9,7 @@ import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.model.Vote;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -25,6 +26,9 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Vote v WHERE v.user.id = :#{#vote.user.id()} AND v.restaurant.id = :#{#vote.restaurant.id()}")
     boolean checkExists(@Param("vote") Vote vote);
 
-    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.restaurant.id = :restaurantId AND v.created > CURRENT_DATE")
-    Vote getByUserIdAndRestaurantId(@Param("userId") Integer userId, @Param("restaurantId") Integer restaurantId);
+    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.restaurant.id = :restaurantId AND v.created = :created")
+    Vote getByUserIdAndRestaurantId(
+            @Param("userId") Integer userId,
+            @Param("restaurantId") Integer restaurantId,
+            @Param("created") LocalDate created);
 }
