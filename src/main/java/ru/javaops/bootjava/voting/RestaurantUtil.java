@@ -12,8 +12,12 @@ public class RestaurantUtil {
 
     public static List<RestaurantTo> unproxy(Collection<RestaurantTo> restaurants) {
         return restaurants.stream()
-                .map(m -> new RestaurantToImpl(m.getId(), m.getName(), m.getDishes(), m.getRating()))
-                .collect(Collectors.toList());
+                .map(restaurantTo -> new RestaurantToImpl(
+                        restaurantTo.getId(),
+                        restaurantTo.getName(),
+                        restaurantTo.getDishes(),
+                        restaurantTo.getRating())
+                ).collect(Collectors.toList());
     }
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {
@@ -22,7 +26,7 @@ public class RestaurantUtil {
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants, boolean includeDishes, boolean includeRating) {
         return restaurants.stream()
-                .map(m -> RestaurantUtil.createTo(m, includeDishes, includeRating))
+                .map(restaurant -> RestaurantUtil.createTo(restaurant, includeDishes, includeRating))
                 .collect(Collectors.toList());
     }
 
@@ -41,5 +45,9 @@ public class RestaurantUtil {
 
     public static Restaurant createNewFromTo(RestaurantTo restaurantTo) {
         return new Restaurant(restaurantTo.getId(), restaurantTo.getName());
+    }
+
+    public static Restaurant createNewFromId(int restaurantId) {
+        return new Restaurant(restaurantId, null);
     }
 }

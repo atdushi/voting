@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.voting.DishUtil;
+import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
@@ -30,7 +31,7 @@ public class DishController {
     @GetMapping("/by-restaurant")
     public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId) {
         log.info("getAll for restaurant {}", restaurantId);
-        List<Dish> all = repository.getAllByRestaurant(restaurantId);
+        List<Dish> all = repository.getAllByRestaurant(RestaurantUtil.createNewFromId(restaurantId));
         return DishUtil.getTos(all);
     }
 

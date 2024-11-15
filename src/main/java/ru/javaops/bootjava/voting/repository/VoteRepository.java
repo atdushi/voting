@@ -22,4 +22,9 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT v FROM Vote v WHERE v.restaurant.id = :#{#restaurant.id()}")
     List<Vote> getAll(@Param("restaurant") Restaurant restaurant);
 
+    @Query("SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END FROM Vote v WHERE v.user.id = :#{#vote.user.id()} AND v.restaurant.id = :#{#vote.restaurant.id()}")
+    boolean checkExists(@Param("vote") Vote vote);
+
+    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.restaurant.id = :restaurantId AND v.created > CURRENT_DATE")
+    Vote getByUserIdAndRestaurantId(@Param("userId") Integer userId, @Param("restaurantId") Integer restaurantId);
 }
