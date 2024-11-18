@@ -30,6 +30,8 @@ import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 public class RestaurantController {
     static final String REST_URL = "/api/restaurant";
     public static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
+    //todo: replace with now
+    public static final LocalDate VOTE_DATE = LocalDate.of(2020, 1, 30);
 
     @Autowired
     protected RestaurantRepository repository;
@@ -93,8 +95,7 @@ public class RestaurantController {
         log.info("vote restaurant {} user {}", id, userId);
 
         if (!LocalTime.now().isBefore(TIME_LIMIT)) {
-            //todo: replace with now
-            Vote vote = voteRepository.getByUserIdAndRestaurantId(userId, id, LocalDate.of(2020, 1, 30));
+            Vote vote = voteRepository.getByUserIdAndRestaurantId(userId, id, VOTE_DATE);
             if (vote == null) {
                 vote = VoteUtil.createNew(userId, id);
             }
