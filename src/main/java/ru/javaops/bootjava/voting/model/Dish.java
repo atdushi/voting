@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,29 +10,23 @@ import ru.javaops.bootjava.common.model.NamedEntity;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "dish")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dish extends NamedEntity {
 
-    @Getter
-    @Setter
     @Column(name = "price", nullable = false, columnDefinition = "decimal")
     private Double price;
 
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @Getter
-    @Setter
     @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
     private Date date;
 
-//    @Getter
-//    @Setter
 //    @Column(name = "restaurant_id", nullable = false)
 //    private int restaurantId;
 

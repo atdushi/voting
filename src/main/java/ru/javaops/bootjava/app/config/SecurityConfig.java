@@ -51,8 +51,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests(authz ->
-                        authz.requestMatchers("/api/**").anonymous())
-//                .httpBasic(withDefaults())
+                        authz.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
+                                .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+                                .requestMatchers("/api/**").authenticated())
+                .httpBasic(withDefaults())
                 .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();

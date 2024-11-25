@@ -18,6 +18,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
 @Slf4j
@@ -56,17 +57,25 @@ public class DishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @RequestBody @Valid DishTo dishTo) {
-        log.info("update {}", dishTo);
-        repository.save(DishUtil.createNewFromTo(dishTo));
+    public void update(@PathVariable int id, @Valid @RequestBody Dish dish) {
+        log.info("update {}", dish);
+        assureIdConsistent(dish, id);
+        repository.save(dish);
     }
 
+    /* POST
+    {
+  "name": "string",
+  "price": 0,
+  "date": "2024-11-25T15:23:21.642Z"
+}
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
-        log.info("register {}", dishTo);
-        checkNew(dishTo);
-        Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
+    public ResponseEntity<Dish> register(@Valid @RequestBody Dish dish) {
+        log.info("register {}", dish);
+        checkNew(dish);
+        Dish created = repository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

@@ -1,8 +1,6 @@
 package ru.javaops.bootjava.voting.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import ru.javaops.bootjava.common.model.BaseEntity;
@@ -14,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @Table(name = "vote")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Vote extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -25,8 +23,6 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Getter
-    @Setter
     @Column(name = "created", nullable = false, columnDefinition = "date default now()")
     private LocalDate created;
 

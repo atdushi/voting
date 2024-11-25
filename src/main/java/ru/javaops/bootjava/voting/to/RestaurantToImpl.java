@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import ru.javaops.bootjava.common.to.NamedTo;
 
-import java.util.Collections;
 import java.util.List;
 
 @Value
@@ -12,7 +11,7 @@ import java.util.List;
 public class RestaurantToImpl extends NamedTo implements RestaurantTo {
     List<DishTo> dishes;
 
-    private Integer rating;
+    Integer rating;
 
     public RestaurantToImpl(Integer id, String name, List<DishTo> dishes, Integer rating) {
         super(id, name);

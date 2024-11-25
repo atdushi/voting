@@ -1,6 +1,6 @@
 package ru.javaops.bootjava.voting.model;
 
-import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -11,19 +11,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@Setter
 @Entity
 @Table(name = "restaurant")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
 
-    @Setter
 //    @OneToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Dish> dishes;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     //https://struchkov.dev/blog/ru/hibernate-multiple-bag-fetch-exception/
     private Set<Vote> votes;

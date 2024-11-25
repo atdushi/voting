@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.app.AuthUtil;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.VoteUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
 @Slf4j
@@ -74,24 +76,26 @@ public class RestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo) {
-        log.info("register {}", restaurantTo);
-        checkNew(restaurantTo);
-        Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
+    public ResponseEntity<Restaurant> register(@Valid @RequestBody Restaurant restaurant) {
+        log.info("register {}", restaurant);
+        checkNew(restaurant);
+        Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @RequestBody @Valid RestaurantTo restaurantTo) {
-        log.info("update {}", restaurantTo);
-        repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
+    public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
+        log.info("update {}", restaurant);
+        assureIdConsistent(restaurant, id);
+        repository.save(restaurant);
     }
 
-    @PostMapping(value = "/{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{id}/vote")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vote> vote(@PathVariable int id, @Valid @RequestBody Integer userId) {
+    public ResponseEntity<Vote> vote(@PathVariable int id) {
+        int userId = AuthUtil.get().id();
         log.info("vote restaurant {} user {}", id, userId);
 
         if (!LocalTime.now().isBefore(TIME_LIMIT)) {
