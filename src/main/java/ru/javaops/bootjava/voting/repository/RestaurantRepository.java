@@ -36,6 +36,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
             """, nativeQuery = true)
     List<RestaurantTo> findAllByRatingDesc();
 
-    @Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes JOIN FETCH r.votes")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes LEFT JOIN FETCH r.votes")
     List<Restaurant> findAllWithDishesAndVotes();
 }
