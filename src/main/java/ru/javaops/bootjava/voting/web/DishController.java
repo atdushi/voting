@@ -63,13 +63,6 @@ public class DishController {
         repository.save(dish);
     }
 
-    /* POST
-    {
-  "name": "string",
-  "price": 0,
-  "date": "2024-11-25T15:23:21.642Z"
-}
-     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Dish> register(@Valid @RequestBody Dish dish) {

@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Restaurant extends NamedEntity {
 //    @OneToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Dish> dishes;
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)

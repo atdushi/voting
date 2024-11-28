@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Dish extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
+    @JsonBackReference // do not serialize
     private Restaurant restaurant;
 
     @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
