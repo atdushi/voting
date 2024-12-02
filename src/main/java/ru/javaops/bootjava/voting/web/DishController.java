@@ -34,20 +34,8 @@ public class DishController {
 
     static final String REST_URL = "/api/dish";
 
-    private LocalDate VOTE_DATE = LocalDate.now();
-
     @Autowired
     protected DishRepository repository;
-
-    @Autowired
-    private Environment env;
-
-    @PostConstruct
-    private void init() {
-        if (Arrays.stream(env.getActiveProfiles()).anyMatch(Profiles.DEVELOPMENT::equalsIgnoreCase)) {
-            VOTE_DATE = LocalDate.of(2020, 1, 30);
-        }
-    }
 
     @GetMapping("/by-restaurant")
     public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) LocalDate date) {

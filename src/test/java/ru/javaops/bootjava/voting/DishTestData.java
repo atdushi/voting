@@ -3,6 +3,8 @@ package ru.javaops.bootjava.voting;
 import ru.javaops.bootjava.MatcherFactory;
 import ru.javaops.bootjava.voting.model.Dish;
 
+import java.time.LocalDate;
+
 import static ru.javaops.bootjava.user.UserTestData.START_SEQ;
 
 public class DishTestData {
@@ -21,4 +23,16 @@ public class DishTestData {
     public static final Dish lasagna3 = new Dish(LASAGNA_3_ID, "лазанья 3", 300.0);
     public static final Dish lasagna4 = new Dish(LASAGNA_4_ID, "лазанья 4", 300.0);
     public static final Dish shashlik = new Dish(SHASHLIK_ID, "шашлык", 400.0);
+
+    public static final LocalDate DATE = LocalDate.of(2020, 1, 30);
+
+    public static Dish getNew() {
+        Dish dish = new Dish(null, "лазанья 5", 300.0);
+        dish.setRestaurant(RestaurantTestData.tokyoCity);
+        return dish;
+    }
+
+    public static Dish getUpdated() {
+        return new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330.0);
+    }
 }

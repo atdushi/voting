@@ -21,7 +21,7 @@ public class Restaurant extends NamedEntity {
 //    @OneToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
-    @JsonManagedReference
+//    @JsonManagedReference
     private Set<Dish> dishes;
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)

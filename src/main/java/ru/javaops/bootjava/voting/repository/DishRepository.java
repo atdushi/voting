@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.bootjava.common.BaseRepository;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.model.Restaurant;
 
@@ -12,7 +13,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface DishRepository extends JpaRepository<Dish, Integer> {
+public interface DishRepository extends BaseRepository<Dish> {
 
     @Transactional
     @Modifying
