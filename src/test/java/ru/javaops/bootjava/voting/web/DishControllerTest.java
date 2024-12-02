@@ -12,10 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.bootjava.voting.DishTestData.*;
 import static ru.javaops.bootjava.voting.RestaurantTestData.TOKYO_CITY_ID;
+import static ru.javaops.bootjava.voting.web.DishController.REST_URL;
 
 public class DishControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL_SLASH = DishController.REST_URL + '/';
+    private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
@@ -30,10 +31,11 @@ public class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH))
+        perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(DISH_MATCHER.contentJson(lasagna1, lasagna2, lasagna3, lasagna4, shashlik));;
     }
 
     @Test

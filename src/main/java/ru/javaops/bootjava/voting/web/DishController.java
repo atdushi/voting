@@ -33,7 +33,7 @@ public class DishController {
         return DishUtil.getTos(all);
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<DishTo> getAll() {
         log.info("getAll");
         List<Dish> all = repository.findAll();
