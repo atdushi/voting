@@ -1,21 +1,27 @@
 package ru.javaops.bootjava.voting.web;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.app.Profiles;
 import ru.javaops.bootjava.voting.DishUtil;
 import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Dish;
+import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
 
 import java.net.URI;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
@@ -25,15 +31,29 @@ import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishController {
+
     static final String REST_URL = "/api/dish";
+
+    private LocalDate VOTE_DATE = LocalDate.now();
 
     @Autowired
     protected DishRepository repository;
 
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    private void init() {
+        if (Arrays.stream(env.getActiveProfiles()).anyMatch(Profiles.DEVELOPMENT::equalsIgnoreCase)) {
+            VOTE_DATE = LocalDate.of(2020, 1, 30);
+        }
+    }
+
     @GetMapping("/by-restaurant")
-    public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId) {
+    public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) LocalDate date) {
         log.info("getAll for restaurant {}", restaurantId);
-        List<Dish> all = repository.getAllByRestaurant(RestaurantUtil.createNewFromId(restaurantId), LocalDate.of(2020, 1, 30));
+        Restaurant newFromId = RestaurantUtil.createNewFromId(restaurantId);
+        List<Dish> all = repository.getAllByRestaurant(newFromId, date == null ? Date.valueOf(LocalDate.now()) : Date.valueOf(date));
         return DishUtil.getTos(all);
     }
 

@@ -8,12 +8,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.bootjava.app.Profiles;
 
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles(Profiles.TEST)
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
 public abstract class AbstractControllerTest {
 
