@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.user.web;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
+@Tag(name = "AdminUser", description = "API для работы пользователями")
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 // TODO: cache only most requested, seldom changed data!

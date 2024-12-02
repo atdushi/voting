@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.user.web;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.net.URI;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
+@Tag(name = "Profile", description = "API для работы с профилем текущего пользователя")
 @RestController
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j

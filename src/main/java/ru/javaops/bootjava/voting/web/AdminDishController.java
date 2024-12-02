@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.web;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.net.URI;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
+@Tag(name = "Dish", description = "API для работы с едой")
 @Slf4j
 @RestController
 @RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)

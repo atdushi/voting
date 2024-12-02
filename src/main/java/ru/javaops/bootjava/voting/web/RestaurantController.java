@@ -1,6 +1,7 @@
 package ru.javaops.bootjava.voting.web;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.util.List;
 
+@Tag(name = "Restaurant", description = "API для работы с ресторанами")
 @Slf4j
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
