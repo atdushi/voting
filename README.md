@@ -1,4 +1,5 @@
 # Voting
+
 ## Technical requirement:
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or SpringBoot) without frontend.
 The task is:
@@ -21,23 +22,30 @@ As a result, provide a link to github repository.
 It should contain the code and README.md with API documentation and curl
 commands to get data for voting and vote.
 
----
-
 P.S.: Make sure everything works with latest version that is on github :)
 
 P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
 
 ---
 
+- Stack: [JDK 21](https://www.oracle.com/de/java/technologies/downloads/#java21), Spring Boot 3.x, Lombok, H2
+- Run: `mvn spring-boot:run` in root directory.
+
+---
+
 ## REST API
 
 [REST API documentation](http://localhost:8080/)
+
 Креденшелы:
+
 ```
 User:  user@yandex.ru / password
 Admin: admin@gmail.com / admin
 Guest: guest@gmail.com / guest
 ```
+
+---
 
 ## Expected UI
 
@@ -61,3 +69,4 @@ Guest: guest@gmail.com / guest
   ![](/images/Untitled4.png)
 
 </details>
+

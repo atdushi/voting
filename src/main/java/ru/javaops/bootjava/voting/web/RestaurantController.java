@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class RestaurantController {
         return RestaurantUtil.createTo(repository.findById(id).orElseThrow());
     }
 
+    @Operation(summary = "get all with rating")
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("getAll");
