@@ -1,16 +1,16 @@
 package ru.javaops.bootjava.voting.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.bootjava.common.BaseRepository;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
+public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Transactional
     @Modifying

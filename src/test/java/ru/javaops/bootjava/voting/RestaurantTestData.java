@@ -29,4 +29,8 @@ public class RestaurantTestData {
     public static Restaurant getNew() {
         return new Restaurant(null, "New");
     }
+
+    public static Restaurant getUpdated() {
+        return new Restaurant(TOKYO_CITY_ID, "ТОКИО-CITY New");
+    }
 }
