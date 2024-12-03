@@ -29,9 +29,6 @@ public class Dish extends NamedEntity {
     @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
     private Date date;
 
-//    @Column(name = "restaurant_id", nullable = false)
-//    private int restaurantId;
-
     public Dish(Integer id, String name, Double price) {
         this(id, name, price, new Date());
     }

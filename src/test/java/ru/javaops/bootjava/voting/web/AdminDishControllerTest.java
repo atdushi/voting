@@ -41,7 +41,6 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void update() throws Exception {
         Dish updated = getUpdated();
-        updated.setId(null);
         DishTo dishTo = new DishTo(updated);
         String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
 

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.bootjava.common.BaseRepository;
 import ru.javaops.bootjava.voting.model.Restaurant;
-import ru.javaops.bootjava.voting.to.RestaurantTo;
+import ru.javaops.bootjava.voting.model.RestaurantWithRating;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
                 group by r.id, r.name
                 order by count(*) desc
             """, nativeQuery = true)
-    List<RestaurantTo> findAllByRatingDesc();
+    List<RestaurantWithRating> findAllByRatingDesc();
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes LEFT JOIN FETCH r.votes")
     List<Restaurant> findAllWithDishesAndVotes();

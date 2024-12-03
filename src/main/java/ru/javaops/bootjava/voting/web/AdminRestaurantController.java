@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
+import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.net.URI;
 
@@ -36,19 +38,19 @@ public class AdminRestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> register(@Valid @RequestBody Restaurant restaurant) {
-        log.info("register {}", restaurant);
-        checkNew(restaurant);
-        Restaurant created = repository.save(restaurant);
+    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo) {
+        log.info("register {}", restaurantTo);
+        checkNew(restaurantTo);
+        Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
-        log.info("update {}", restaurant);
-        assureIdConsistent(restaurant, id);
-        repository.save(restaurant);
+    public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo) {
+        log.info("update {}", restaurantTo);
+        assureIdConsistent(restaurantTo, id);
+        repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
     }
 }

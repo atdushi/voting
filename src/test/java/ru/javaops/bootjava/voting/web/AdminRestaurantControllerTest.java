@@ -11,6 +11,7 @@ import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.user.UserTestData;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
+import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,10 +39,12 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void update() throws Exception {
         Restaurant updated = getUpdated();
-        updated.setId(null);
+        RestaurantTo restaurantTo = new RestaurantTo(updated);
+        String json = JsonUtil.writeValue(restaurantTo);
+
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TOKYO_CITY_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(json))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -52,7 +55,8 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void createNew() throws Exception {
         Restaurant newRestaurant = getNew();
-        String json = JsonUtil.writeValue(newRestaurant);
+        RestaurantTo restaurantTo = new RestaurantTo(newRestaurant);
+        String json = JsonUtil.writeValue(restaurantTo);
 
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)

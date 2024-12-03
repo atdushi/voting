@@ -2,7 +2,7 @@ package ru.javaops.bootjava.voting;
 
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.to.RestaurantTo;
-import ru.javaops.bootjava.voting.to.RestaurantToImpl;
+import ru.javaops.bootjava.voting.model.RestaurantWithRating;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,36 +10,19 @@ import java.util.stream.Collectors;
 
 public class RestaurantUtil {
 
-    public static List<RestaurantTo> unproxy(Collection<RestaurantTo> restaurants) {
+    public static List<RestaurantTo> getTos(Collection<RestaurantWithRating> restaurants) {
         return restaurants.stream()
-                .map(restaurantTo -> new RestaurantToImpl(
-                        restaurantTo.getId(),
-                        restaurantTo.getName(),
-                        restaurantTo.getDishes(),
-                        restaurantTo.getRating())
-                ).collect(Collectors.toList());
-    }
-
-    public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {
-        return getTos(restaurants, false, false);
-    }
-
-    public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants, boolean includeDishes, boolean includeRating) {
-        return restaurants.stream()
-                .map(restaurant -> RestaurantUtil.createTo(restaurant, includeDishes, includeRating))
+                .map(RestaurantTo::new)
                 .collect(Collectors.toList());
     }
 
-    public static RestaurantTo createTo(Restaurant restaurant) {
-        return createTo(restaurant, false, false);
+    public static List<RestaurantTo> getTos(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                .map(RestaurantTo::new)
+                .collect(Collectors.toList());
     }
 
-    public static RestaurantTo createTo(Restaurant restaurant, boolean includeDishes, boolean includeRating) {
-        return new RestaurantToImpl(
-                restaurant.getId(),
-                restaurant.getName(),
-                includeDishes ? DishUtil.getTos(restaurant.getDishes()) : null,
-                includeRating ? restaurant.getVotes().size() : null
-        );
+    public static Restaurant createNewFromTo(RestaurantTo restaurantTo) {
+        return new Restaurant(restaurantTo.getId(), restaurantTo.getName());
     }
 }

@@ -18,14 +18,10 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
 
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
-//    @JsonManagedReference
     private Set<Dish> dishes;
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
-    //https://struchkov.dev/blog/ru/hibernate-multiple-bag-fetch-exception/
     private Set<Vote> votes;
 
     public Restaurant(Integer id, String name) {
