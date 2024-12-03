@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import ru.javaops.bootjava.common.util.JsonUtil;
 
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -50,7 +52,14 @@ public class AppConfig {
     }
 
     @Bean
-    CacheManager cacheManager() {
-        return new CaffeineCacheManager();
+    Caffeine<Object, Object> caffeineConfig() {
+        return Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES);
+    }
+
+    @Bean
+    CacheManager cacheManager(Caffeine<Object, Object> caffeine) {
+        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
+        caffeineCacheManager.setCaffeine(caffeine);
+        return caffeineCacheManager;
     }
 }
