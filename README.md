@@ -28,7 +28,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 ---
 
-- Stack: [JDK 21](https://www.oracle.com/de/java/technologies/downloads/#java21), Spring Boot 3.x, Lombok, H2
+- Stack: JDK 21, Spring Boot 3.x, Lombok, [H2](http://localhost:8080/h2-console/), Caffeine Cache
 - Run: `mvn spring-boot:run` in root directory.
 
 ---
@@ -37,7 +37,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 [REST API documentation](http://localhost:8080/)
 
-Креденшелы:
+Credentials:
 
 ```
 User:  user@yandex.ru / password
@@ -64,7 +64,7 @@ Guest: guest@gmail.com / guest
 </details>
 
 <details>
-  <summary>Users vote</summary>
+  <summary>Voting</summary>
 
   ![](/images/Untitled4.png)
 
