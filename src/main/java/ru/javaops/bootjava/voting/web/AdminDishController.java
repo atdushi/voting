@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.voting.DishUtil;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.repository.DishRepository;
+import ru.javaops.bootjava.voting.to.DishTo;
 
 import java.net.URI;
 
@@ -36,18 +38,18 @@ public class AdminDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int id, @Valid @RequestBody Dish dish) {
-        log.info("update {}", dish);
-        assureIdConsistent(dish, id);
-        repository.save(dish);
+    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo) {
+        log.info("update {}", dishTo);
+        assureIdConsistent(dishTo, id);
+        repository.save(DishUtil.createNewFromTo(dishTo));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Dish> register(@Valid @RequestBody Dish dish) {
-        log.info("register {}", dish);
-        checkNew(dish);
-        Dish created = repository.save(dish);
+    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
+        log.info("register {}", dishTo);
+        checkNew(dishTo);
+        Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

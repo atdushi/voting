@@ -1,7 +1,9 @@
 package ru.javaops.bootjava.voting;
 
 import ru.javaops.bootjava.MatcherFactory;
+import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.voting.model.Dish;
+import ru.javaops.bootjava.voting.to.DishTo;
 
 import java.time.LocalDate;
 
@@ -33,6 +35,12 @@ public class DishTestData {
     }
 
     public static Dish getUpdated() {
-        return new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330.0);
+        Dish dish = new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330.0);
+        dish.setRestaurant(RestaurantTestData.tokyoCity);
+        return dish;
+    }
+
+    public static String jsonWithRestaurantId(DishTo dishTo, Integer restaurantId) {
+        return JsonUtil.writeAdditionProps(dishTo, "restaurantId", restaurantId);
     }
 }

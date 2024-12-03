@@ -9,8 +9,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.bootjava.AbstractControllerTest;
 import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.user.UserTestData;
+import ru.javaops.bootjava.voting.DishUtil;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.repository.DishRepository;
+import ru.javaops.bootjava.voting.to.DishTo;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,9 +42,12 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = getUpdated();
         updated.setId(null);
+        DishTo dishTo = new DishTo(updated);
+        String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
+
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + LASAGNA_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(json))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -53,7 +58,8 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void createNew() throws Exception {
         Dish newDish = getNew();
-        String json = JsonUtil.writeValue(newDish);
+        DishTo dishTo = new DishTo(newDish);
+        String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
 
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)

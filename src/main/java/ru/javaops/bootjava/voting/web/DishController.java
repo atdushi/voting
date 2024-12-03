@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.bootjava.voting.DishUtil;
-import ru.javaops.bootjava.voting.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Dish;
-import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
 
@@ -30,8 +28,7 @@ public class DishController {
     @GetMapping("/by-restaurant")
     public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) LocalDate date) {
         log.info("getAll for restaurant {}", restaurantId);
-        Restaurant newFromId = RestaurantUtil.createNewFromId(restaurantId);
-        List<Dish> all = repository.getAllByRestaurant(newFromId, date == null ? Date.valueOf(LocalDate.now()) : Date.valueOf(date));
+        List<Dish> all = repository.getAllByRestaurantId(restaurantId, date == null ? Date.valueOf(LocalDate.now()) : Date.valueOf(date));
         return DishUtil.getTos(all);
     }
 
@@ -44,6 +41,6 @@ public class DishController {
 
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int id) {
-        return DishUtil.createTo(repository.findById(id).orElseThrow());
+        return new DishTo(repository.findById(id).orElseThrow());
     }
 }

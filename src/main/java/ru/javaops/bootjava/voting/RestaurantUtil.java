@@ -42,12 +42,4 @@ public class RestaurantUtil {
                 includeRating ? restaurant.getVotes().size() : null
         );
     }
-
-    public static Restaurant createNewFromTo(RestaurantTo restaurantTo) {
-        return new Restaurant(restaurantTo.getId(), restaurantTo.getName());
-    }
-
-    public static Restaurant createNewFromId(int restaurantId) {
-        return new Restaurant(restaurantId, null);
-    }
 }

@@ -11,31 +11,16 @@ import java.util.stream.Collectors;
 public class DishUtil {
 
     public static List<DishTo> getTos(Collection<Dish> dishes) {
-        return getTos(dishes, false);
-    }
-
-    public static List<DishTo> getTos(Collection<Dish> dishes, boolean includeRestaurant) {
         return dishes.stream()
-                .map(dish -> DishUtil.createTo(dish, includeRestaurant))
+                .map(DishTo::new)
                 .collect(Collectors.toList());
     }
 
-    public static DishTo createTo(Dish dish) {
-        return createTo(dish, false);
-    }
-
-    public static DishTo createTo(Dish dish, boolean includeRestaurant) {
-        Restaurant restaurant = dish.getRestaurant();
-
-        return new DishTo(
-                dish.getId(),
-                dish.getName(),
-                dish.getPrice(),
-                includeRestaurant ? RestaurantUtil.createTo(restaurant) : null
-        );
-    }
-
     public static Dish createNewFromTo(DishTo dishTo) {
-        return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice());
+        Dish dish = new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice());
+        if (dishTo.getRestaurantId() != null) {
+            dish.setRestaurant(new Restaurant(dishTo.getRestaurantId(), null));
+        }
+        return dish;
     }
 }
