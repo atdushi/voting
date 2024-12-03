@@ -4,17 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.app.AuthUtil;
-import ru.javaops.bootjava.app.Profiles;
 import ru.javaops.bootjava.voting.VoteUtil;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
@@ -22,7 +19,6 @@ import ru.javaops.bootjava.voting.repository.VoteRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
@@ -34,20 +30,10 @@ public class VoteController {
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
-    private LocalDate VOTE_DATE = LocalDate.now();
+    private final LocalDate VOTE_DATE = LocalDate.now();
 
     @Autowired
     protected VoteRepository repository;
-
-    @Autowired
-    private Environment env;
-
-    @PostConstruct
-    private void init() {
-        if (Arrays.stream(env.getActiveProfiles()).anyMatch(Profiles.DEVELOPMENT::equalsIgnoreCase)) {
-            VOTE_DATE = LocalDate.of(2020, 1, 30);
-        }
-    }
 
     @GetMapping("/{voteId}")
     public Vote get(@PathVariable int voteId) {
