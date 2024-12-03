@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,20 +33,26 @@ public class AdminDishController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restaurantDishes", allEntries = true)
     public void delete(@PathVariable int id) {
         repository.deleteById(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restaurantDishes", allEntries = true)
     public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo) {
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
-        repository.save(DishUtil.createNewFromTo(dishTo));
+        Dish existed = repository.getExisted(id);
+        Dish newFromTo = DishUtil.createNewFromTo(dishTo);
+        newFromTo.setDate(existed.getDate());
+        repository.save(newFromTo);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "restaurantDishes", allEntries = true)
     public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);

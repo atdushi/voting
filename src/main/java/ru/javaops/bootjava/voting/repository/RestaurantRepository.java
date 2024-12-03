@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.voting.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     // limit 1
     Restaurant findFirstByRatingDesc();
 
+    @Cacheable("restaurantsWithRating")
     @Query(value = """
              select r.id, r.name, cast(sum(v1.cnt) as int) rating
                 from restaurant r
@@ -36,6 +38,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc();
 
+    @Cacheable("restaurants")
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes LEFT JOIN FETCH r.votes")
     List<Restaurant> findAllWithDishesAndVotes();
 }
