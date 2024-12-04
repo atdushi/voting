@@ -36,9 +36,9 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAll() {
+    public List<RestaurantTo> getAll(@RequestParam(required = false) LocalDate date) {
         log.info("getAll");
-        List<Restaurant> withDishesAndVotes = repository.findAllWithDishesAndVotes();
+        List<Restaurant> withDishesAndVotes = repository.findAllWithDishesAndVotes(date == null ? LocalDate.now() : date);
         return RestaurantUtil.getTos(withDishesAndVotes);
     }
 

@@ -21,15 +21,14 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     int delete(int id);
 
     @Query("""
-             SELECT r
-                FROM Vote v
-                JOIN Restaurant r ON v.restaurant.id = r.id
-                WHERE v.created = :date
-                GROUP BY r
-                ORDER BY COUNT(*) DESC
+            SELECT r
+            FROM Vote v
+            JOIN Restaurant r ON v.restaurant.id = r.id
+            WHERE v.created = :date
+            GROUP BY r
+            ORDER BY COUNT(*) DESC
             """)
-    // limit 1
-    Restaurant findFirstByRatingDesc(LocalDate date);
+    Restaurant findFirstByRatingDesc(LocalDate date);   // limit 1
 
     @Cacheable("restaurantsWithRating")
     @Query(value = """
@@ -41,9 +40,12 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc(Date date);
 
-    //todo: date
-
     @Cacheable("restaurants")
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes LEFT JOIN FETCH r.votes")
-    List<Restaurant> findAllWithDishesAndVotes();
+    @Query("""
+            SELECT r
+            FROM Restaurant r
+            LEFT JOIN FETCH r.dishes d
+            LEFT JOIN FETCH r.votes v
+            WHERE v.created = :date OR v.created IS NULL""")
+    List<Restaurant> findAllWithDishesAndVotes(LocalDate date);
 }
