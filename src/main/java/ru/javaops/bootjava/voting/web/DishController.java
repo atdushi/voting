@@ -1,5 +1,8 @@
 package ru.javaops.bootjava.voting.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +23,15 @@ import java.util.List;
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishController {
 
-    static final String REST_URL = "/api/dish";
+    static final String REST_URL = "/api/dishes";
 
     @Autowired
     protected DishRepository repository;
 
+    @Parameters({
+            @Parameter(name = "restaurantId", description = "id ресторана"),
+            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
+    })
     @GetMapping("/by-restaurant")
     public List<DishTo> getAllByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) LocalDate date) {
         log.info("getAll for restaurant {}", restaurantId);

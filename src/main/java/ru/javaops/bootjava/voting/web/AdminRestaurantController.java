@@ -27,7 +27,7 @@ import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestaurantController {
 
-    static final String REST_URL = "/api/admin/restaurant";
+    static final String REST_URL = "/api/admin/restaurants";
 
     @Autowired
     protected RestaurantRepository repository;

@@ -26,7 +26,7 @@ import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 @RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminDishController {
 
-    static final String REST_URL = "/api/admin/dish";
+    static final String REST_URL = "/api/admin/dishes";
 
     @Autowired
     protected DishRepository repository;

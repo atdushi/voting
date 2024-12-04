@@ -3,6 +3,7 @@ package ru.javaops.bootjava.voting;
 import ru.javaops.bootjava.MatcherFactory;
 import ru.javaops.bootjava.voting.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import static ru.javaops.bootjava.user.UserTestData.START_SEQ;
@@ -10,6 +11,8 @@ import static ru.javaops.bootjava.user.UserTestData.START_SEQ;
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "votes", "dishes");// "dishes.restaurant", "dishes.date");
+
+    public static final LocalDate DATE = LocalDate.of(2020, 1, 30);
 
     public static final int TOKYO_CITY_ID = START_SEQ + 3;
     public static final int BAHROMA_ID = START_SEQ + 4;

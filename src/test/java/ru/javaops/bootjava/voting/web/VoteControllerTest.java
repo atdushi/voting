@@ -16,10 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.bootjava.voting.VoteTestData.*;
+import static ru.javaops.bootjava.voting.web.VoteController.REST_URL;
 
 public class VoteControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL_SLASH = VoteController.REST_URL + '/';
+    private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
     private VoteRepository repository;
@@ -38,11 +39,10 @@ public class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void createNew() throws Exception {
         Vote newVote = getNew();
-        String json = JsonUtil.writeValue(VOTE_DATE);
-
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().id())
+        assert newVote.getRestaurant().getId() != null;
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                .content(newVote.getRestaurant().getId().toString()))
                 .andExpect(status().isCreated());
 
         Vote created = VOTE_MATCHER.readFromJson(action);

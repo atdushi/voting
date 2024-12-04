@@ -8,6 +8,8 @@ import ru.javaops.bootjava.common.BaseRepository;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.model.RestaurantWithRating;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -22,21 +24,24 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
              SELECT r
                 FROM Vote v
                 JOIN Restaurant r ON v.restaurant.id = r.id
+                WHERE v.created = :date
                 GROUP BY r
                 ORDER BY COUNT(*) DESC
             """)
     // limit 1
-    Restaurant findFirstByRatingDesc();
+    Restaurant findFirstByRatingDesc(LocalDate date);
 
     @Cacheable("restaurantsWithRating")
     @Query(value = """
              select r.id, r.name, cast(sum(v1.cnt) as int) rating
                 from restaurant r
-                left join (select v.*, 1 cnt from vote v) v1 on v1.restaurant_id = r.id
+                left join (select v.*, 1 cnt from vote v where v.created = :date) v1 on v1.restaurant_id = r.id
                 group by r.id, r.name
                 order by count(*) desc
             """, nativeQuery = true)
-    List<RestaurantWithRating> findAllByRatingDesc();
+    List<RestaurantWithRating> findAllByRatingDesc(Date date);
+
+    //todo: date
 
     @Cacheable("restaurants")
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes LEFT JOIN FETCH r.votes")

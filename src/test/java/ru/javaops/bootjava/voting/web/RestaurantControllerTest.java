@@ -41,7 +41,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void getAllByRating() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "order-by-rating-desc"))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "order-by-rating-desc?date=" + DATE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -51,7 +51,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void getTopRanked() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "top-ranked"))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "top-ranked?date=" + DATE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

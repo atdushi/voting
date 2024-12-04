@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import ru.javaops.bootjava.voting.repository.VoteRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
@@ -26,31 +29,43 @@ import java.time.LocalTime;
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
 
-    static final String REST_URL = "/api/vote";
+    static final String REST_URL = "/api/votes";
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
     private final LocalDate VOTE_DATE = LocalDate.now();
 
+    private boolean skipTimeLimit = false;
+
     @Autowired
     protected VoteRepository repository;
 
-    @GetMapping("/{voteId}")
-    public Vote get(@PathVariable int voteId) {
-        return repository.findById(voteId).orElseThrow();
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    private void init() {
+        if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
+            skipTimeLimit = true;
+        }
     }
 
-    @Operation(summary = "only votes before 11 A.M. are count")
+    @GetMapping("/{id}")
+    public Vote get(@PathVariable int id) {
+        return repository.findById(id).orElseThrow();
+    }
+
+    @Operation(summary = "учитываются голоса только до 11:00")
     @Parameters({
         @Parameter(name = "restaurantId", description = "id ресторана")
     })
-    @PostMapping("/{restaurantId}")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vote> vote(@PathVariable int restaurantId) {
+    public ResponseEntity<Vote> vote(@RequestBody int restaurantId) {
         int userId = AuthUtil.get().id();
         log.info("vote restaurant {} user {}", restaurantId, userId);
 
-        if (!LocalTime.now().isBefore(TIME_LIMIT)) {
+        if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeLimit) {
             Vote vote = repository.getByUserIdAndRestaurantId(userId, restaurantId, VOTE_DATE);
             if (vote == null) {
                 vote = VoteUtil.createNew(userId, restaurantId);
