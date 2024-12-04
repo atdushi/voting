@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javaops.bootjava.voting.DishUtil;
+import ru.javaops.bootjava.voting.util.DishUtil;
 import ru.javaops.bootjava.voting.model.Dish;
 import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;

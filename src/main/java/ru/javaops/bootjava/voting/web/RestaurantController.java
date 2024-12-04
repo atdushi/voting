@@ -1,6 +1,5 @@
 package ru.javaops.bootjava.voting.web;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.javaops.bootjava.voting.RestaurantUtil;
+import ru.javaops.bootjava.voting.util.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
 import ru.javaops.bootjava.voting.to.RestaurantTo;

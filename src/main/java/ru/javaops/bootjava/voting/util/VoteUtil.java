@@ -1,4 +1,4 @@
-package ru.javaops.bootjava.voting;
+package ru.javaops.bootjava.voting.util;
 
 import ru.javaops.bootjava.user.model.User;
 import ru.javaops.bootjava.voting.model.Restaurant;

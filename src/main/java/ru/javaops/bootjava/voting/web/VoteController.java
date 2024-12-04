@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.app.AuthUtil;
-import ru.javaops.bootjava.voting.VoteUtil;
+import ru.javaops.bootjava.voting.util.VoteUtil;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
 

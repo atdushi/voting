@@ -32,11 +32,11 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Cacheable("restaurantsWithRating")
     @Query(value = """
-             select r.id, r.name, cast(sum(v1.cnt) as int) rating
-                from restaurant r
-                left join (select v.*, 1 cnt from vote v where v.created = :date) v1 on v1.restaurant_id = r.id
-                group by r.id, r.name
-                order by count(*) desc
+            select r.id, r.name, cast(sum(v1.cnt) as int) rating
+            from restaurant r
+            left join (select v.*, 1 cnt from vote v where v.created = :date) v1 on v1.restaurant_id = r.id
+            group by r.id, r.name
+            order by count(*) desc
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc(Date date);
 

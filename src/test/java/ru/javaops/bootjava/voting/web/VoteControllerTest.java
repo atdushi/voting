@@ -7,7 +7,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.bootjava.AbstractControllerTest;
-import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.user.UserTestData;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
