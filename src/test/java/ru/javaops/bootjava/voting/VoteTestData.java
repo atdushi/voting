@@ -3,6 +3,7 @@ package ru.javaops.bootjava.voting;
 import ru.javaops.bootjava.MatcherFactory;
 import ru.javaops.bootjava.user.UserTestData;
 import ru.javaops.bootjava.voting.model.Vote;
+import ru.javaops.bootjava.voting.to.VoteTo;
 
 import java.time.LocalDate;
 
@@ -13,12 +14,16 @@ public class VoteTestData {
     public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER =
             MatcherFactory.usingComparingOnlyFieldsComparator(Vote.class, "id", "restaurant.id", "user.id");
 
+    public static final MatcherFactory.Matcher<VoteTo> VOTETO_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(VoteTo.class);
+
     public static LocalDate VOTE_DATE = LocalDate.of(2020, 1, 30);
 
     public static final int TOKYO_VOTE_1_ID = START_SEQ + 10;
     public static final int TOKYO_VOTE_2_ID = START_SEQ + 11;
 
     public static Vote TokyoVote1 = new Vote(TOKYO_VOTE_1_ID, UserTestData.user, RestaurantTestData.tokyoCity);
+    public static VoteTo TokyoVoteTo1 = new VoteTo(TOKYO_VOTE_1_ID, UserTestData.user.getId(), RestaurantTestData.tokyoCity.getId());
 
     public static Vote getNew() {
         return new Vote(null, UserTestData.user, RestaurantTestData.bahroma);

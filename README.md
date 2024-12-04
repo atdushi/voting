@@ -1,4 +1,4 @@
-# Voting
+# What's for Dinner
 
 ## Technical requirement:
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or SpringBoot) without frontend.

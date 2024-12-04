@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.app.AuthUtil;
+import ru.javaops.bootjava.voting.to.VoteTo;
 import ru.javaops.bootjava.voting.util.VoteUtil;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
@@ -51,8 +52,8 @@ public class VoteController {
     }
 
     @GetMapping("/{id}")
-    public Vote get(@PathVariable int id) {
-        return repository.findById(id).orElseThrow();
+    public VoteTo get(@PathVariable int id) {
+        return new VoteTo(repository.findById(id).orElseThrow());
     }
 
     @Operation(summary = "учитываются голоса только до 11:00")
