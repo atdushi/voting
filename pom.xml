@@ -12,7 +12,7 @@
     <artifactId>bootjava</artifactId>
     <version>1.0</version>
     <name>BootJava</name>
-    <description>Spring Boot 3.x HATEOAS application (BootJava)</description>
+    <description>Spring Boot 3.x application (BootJava)</description>
     <url>https://javaops.ru/view/bootjava</url>
 
     <properties>
