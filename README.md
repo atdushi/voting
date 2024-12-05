@@ -1,4 +1,8 @@
-![What's for Dinner](./images/logo.png)
+<p align="center">
+  <img alt="What's for Dinner" src="/images/logo_small.png" />
+</p>
+
+# Voting for Restaurant
 
 ## Technical requirement:
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or SpringBoot) without frontend.
