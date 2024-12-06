@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.bootjava.AbstractControllerTest;
 import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.user.UserTestData;
-import ru.javaops.bootjava.voting.RestaurantTestData;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
 
@@ -39,30 +38,36 @@ public class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void countByRestaurant() throws Exception {
+        Vote newVote = getNew();
+        Vote created = vote(newVote);
+
         ResultActions action = perform(MockMvcRequestBuilders.get(
-                REST_URL_SLASH + "count-by-restaurant?restaurantId=" + RestaurantTestData.TOKYO_CITY_ID))
+                REST_URL_SLASH + "count-by-restaurant?restaurantId=" + created.getRestaurant().getId()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
         Integer i = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), Integer.class);
-        assert i == 2;
+        assert i == 1;
     }
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void createNew() throws Exception {
         Vote newVote = getNew();
+        Vote created = vote(newVote);
+        int newId = created.id();
+        newVote.setId(newId);
+        VOTE_MATCHER.assertMatch(created, newVote);
+        VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+    }
+
+    private Vote vote(Vote newVote) throws Exception {
         assert newVote.getRestaurant().getId() != null;
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newVote.getRestaurant().getId().toString()))
                 .andExpect(status().isCreated());
-
-        Vote created = VOTE_MATCHER.readFromJson(action);
-        int newId = created.id();
-        newVote.setId(newId);
-        VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+        return VOTE_MATCHER.readFromJson(action);
     }
 }

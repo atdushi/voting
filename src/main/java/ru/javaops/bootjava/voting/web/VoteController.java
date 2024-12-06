@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
@@ -50,7 +49,6 @@ public class VoteController {
     private void init() {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
             skipTimeLimit = true;
-            VOTE_DATE = LocalDate.of(2020, 1, 30);
         }
     }
 
