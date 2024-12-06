@@ -7,7 +7,9 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.bootjava.AbstractControllerTest;
+import ru.javaops.bootjava.common.util.JsonUtil;
 import ru.javaops.bootjava.user.UserTestData;
+import ru.javaops.bootjava.voting.RestaurantTestData;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
 
@@ -32,6 +34,19 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(VOTETO_MATCHER.contentJson(TokyoVoteTo1));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.USER_MAIL)
+    void countByRestaurant() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(
+                REST_URL_SLASH + "count-by-restaurant?restaurantId=" + RestaurantTestData.TOKYO_CITY_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        Integer i = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), Integer.class);
+        assert i == 2;
     }
 
     @Test

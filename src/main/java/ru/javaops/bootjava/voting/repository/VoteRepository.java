@@ -11,6 +11,7 @@ import ru.javaops.bootjava.voting.model.Vote;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends BaseRepository<Vote> {
@@ -23,8 +24,12 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v WHERE v.restaurant.id = :#{#restaurant.id()}")
     List<Vote> getAll(@Param("restaurant") Restaurant restaurant);
 
-    @Query("SELECT v FROM Vote v WHERE v.user.id = :userId AND v.restaurant.id = :restaurantId AND v.created = :created")
-    Vote getByUserIdAndRestaurantId(
+    @Query("""
+            SELECT v FROM Vote v
+            WHERE (v.user.id = :userId AND :userId IS NOT NULL OR :userId IS NULL)
+                AND (v.restaurant.id = :restaurantId AND :restaurantId IS NOT NULL OR :restaurantId IS NULL)
+                AND v.created = :created""")
+    List<Vote> getByUserIdAndRestaurantId(
             @Param("userId") Integer userId,
             @Param("restaurantId") Integer restaurantId,
             @Param("created") LocalDate created);

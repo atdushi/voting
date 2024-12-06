@@ -23,6 +23,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
@@ -34,7 +36,7 @@ public class VoteController {
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
-    private final LocalDate VOTE_DATE = LocalDate.now();
+    private LocalDate VOTE_DATE = LocalDate.now();
 
     private boolean skipTimeLimit = false;
 
@@ -48,12 +50,19 @@ public class VoteController {
     private void init() {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
             skipTimeLimit = true;
+            VOTE_DATE = LocalDate.of(2020, 1, 30);
         }
     }
 
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {
         return new VoteTo(repository.findById(id).orElseThrow());
+    }
+
+    @GetMapping("/count-by-restaurant")
+    public int countByRestaurant(@RequestParam int restaurantId) {
+        List<Vote> votes = repository.getByUserIdAndRestaurantId(null, restaurantId, VOTE_DATE);
+        return votes.size();
     }
 
     @Operation(summary = "учитываются голоса только до 11:00")
@@ -67,7 +76,8 @@ public class VoteController {
         log.info("vote restaurant {} user {}", restaurantId, userId);
 
         if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeLimit) {
-            Vote vote = repository.getByUserIdAndRestaurantId(userId, restaurantId, VOTE_DATE);
+            List<Vote> votes = repository.getByUserIdAndRestaurantId(userId, restaurantId, VOTE_DATE);
+            Vote vote = !votes.isEmpty() ? votes.getFirst() : null;
             if (vote == null) {
                 vote = VoteUtil.createNew(userId, restaurantId);
             }
