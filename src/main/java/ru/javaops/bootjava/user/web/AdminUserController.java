@@ -17,7 +17,7 @@ import java.util.List;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
-@Tag(name = "AdminUser", description = "API для работы пользователями")
+@Tag(name = "Admin User", description = "API администратора для работы с пользователями")
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 // TODO: cache only most requested, seldom changed data!

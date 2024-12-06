@@ -20,7 +20,7 @@ import java.net.URI;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
 
-@Tag(name = "Restaurant", description = "API для работы с ресторанами")
+@Tag(name = "Admin Restaurant", description = "API администратора для работы с ресторанами")
 @Slf4j
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
