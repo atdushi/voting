@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.voting.util.RestaurantUtil;
@@ -17,8 +18,7 @@ import ru.javaops.bootjava.voting.to.RestaurantTo;
 
 import java.net.URI;
 
-import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
-import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
+import static ru.javaops.bootjava.common.validation.ValidationUtil.*;
 
 @Tag(name = "Admin Restaurant", description = "API администратора для работы с ресторанами")
 @Slf4j
@@ -45,16 +45,23 @@ public class AdminRestaurantController {
         log.info("register {}", restaurantTo);
         checkNew(restaurantTo);
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL+ "/{id}")
+                .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo) {
+    public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorFieldsMsg = extractErrors(result);
+            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
+        }
         log.info("update {}", restaurantTo);
         assureIdConsistent(restaurantTo, id);
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
+        return ResponseEntity.noContent().build();
     }
 }

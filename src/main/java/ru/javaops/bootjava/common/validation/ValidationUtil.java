@@ -1,8 +1,11 @@
 package ru.javaops.bootjava.common.validation;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.validation.BindingResult;
 import ru.javaops.bootjava.common.HasId;
 import ru.javaops.bootjava.common.error.IllegalRequestDataException;
+
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ValidationUtil {
@@ -20,5 +23,11 @@ public class ValidationUtil {
         } else if (bean.id() != id) {
             throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must has id=" + id);
         }
+    }
+
+    public static String extractErrors(BindingResult result){
+        return result.getFieldErrors().stream()
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .collect(Collectors.joining("<br>"));
     }
 }

@@ -35,7 +35,7 @@ public class VoteController {
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
-    private LocalDate VOTE_DATE = LocalDate.now();
+    private final LocalDate VOTE_DATE = LocalDate.now();
 
     private boolean skipTimeLimit = false;
 
@@ -81,7 +81,9 @@ public class VoteController {
             }
             vote.setCreated(LocalDate.now());
             repository.save(vote);
-            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
+            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(REST_URL+ "/{id}")
+                    .buildAndExpand(vote.getId()).toUri();
             return ResponseEntity.created(uriOfNewResource).body(vote);
         } else {
             return ResponseEntity.badRequest().body(null);

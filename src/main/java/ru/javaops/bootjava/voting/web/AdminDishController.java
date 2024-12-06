@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.voting.util.DishUtil;
@@ -16,9 +17,9 @@ import ru.javaops.bootjava.voting.repository.DishRepository;
 import ru.javaops.bootjava.voting.to.DishTo;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
-import static ru.javaops.bootjava.common.validation.ValidationUtil.assureIdConsistent;
-import static ru.javaops.bootjava.common.validation.ValidationUtil.checkNew;
+import static ru.javaops.bootjava.common.validation.ValidationUtil.*;
 
 @Tag(name = "Admin Dish", description = "API администратора для работы с едой")
 @Slf4j
@@ -41,13 +42,18 @@ public class AdminDishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo) {
+    public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody DishTo dishTo, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorFieldsMsg = extractErrors(result);
+            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
+        }
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
         Dish existed = repository.getExisted(id);
         Dish newFromTo = DishUtil.createNewFromTo(dishTo);
         newFromTo.setDate(existed.getDate());
         repository.save(newFromTo);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +63,9 @@ public class AdminDishController {
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL+ "/{id}")
+                .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 }
