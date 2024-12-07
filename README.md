@@ -4,7 +4,7 @@
 
 # Voting for Restaurant
 
-## Technical requirement:
+## Technical requirement
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or SpringBoot) without frontend.
 The task is:
 
