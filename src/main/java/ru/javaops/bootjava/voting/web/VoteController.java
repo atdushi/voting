@@ -1,8 +1,8 @@
 package ru.javaops.bootjava.voting.web;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.bootjava.app.AuthUtil;
-import ru.javaops.bootjava.voting.to.VoteTo;
-import ru.javaops.bootjava.voting.util.VoteUtil;
 import ru.javaops.bootjava.voting.model.Vote;
 import ru.javaops.bootjava.voting.repository.VoteRepository;
+import ru.javaops.bootjava.voting.to.VoteTo;
+import ru.javaops.bootjava.voting.util.VoteUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -59,13 +59,13 @@ public class VoteController {
 
     @GetMapping("/count-by-restaurant")
     public int countByRestaurant(@RequestParam int restaurantId) {
-        List<Vote> votes = repository.getByUserIdAndRestaurantId(null, restaurantId, VOTE_DATE);
+        List<Vote> votes = repository.getByRestaurantId(restaurantId, VOTE_DATE);
         return votes.size();
     }
 
     @Operation(summary = "учитываются голоса только до 11:00")
     @Parameters({
-        @Parameter(name = "restaurantId", description = "id ресторана")
+            @Parameter(name = "restaurantId", description = "id ресторана")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -82,7 +82,7 @@ public class VoteController {
             vote.setCreated(LocalDate.now());
             repository.save(vote);
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(REST_URL+ "/{id}")
+                    .path(REST_URL + "/{id}")
                     .buildAndExpand(vote.getId()).toUri();
             return ResponseEntity.created(uriOfNewResource).body(vote);
         } else {

@@ -5,13 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.bootjava.common.BaseRepository;
-import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.user.model.User;
+import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.model.Vote;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends BaseRepository<Vote> {
@@ -33,4 +32,12 @@ public interface VoteRepository extends BaseRepository<Vote> {
             @Param("userId") Integer userId,
             @Param("restaurantId") Integer restaurantId,
             @Param("created") LocalDate created);
+
+    default List<Vote> getByUserId(Integer userId, LocalDate created) {
+        return getByUserIdAndRestaurantId(userId, null, created);
+    }
+
+    default List<Vote> getByRestaurantId(Integer restaurantId, LocalDate created) {
+        return getByUserIdAndRestaurantId(null, restaurantId, created);
+    }
 }
