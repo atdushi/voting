@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/32c5fe4055394ca0b238e1f38df40736)](https://app.codacy.com/gh/atdushi/voting/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/32c5fe4055394ca0b238e1f38df40736)](https://app.codacy.com/gh/atdushi/voting/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 <p align="center">
   <img alt="What's for Dinner" src="/images/logo_small.png" />
 </p>
