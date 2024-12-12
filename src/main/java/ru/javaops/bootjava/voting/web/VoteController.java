@@ -37,7 +37,8 @@ public class VoteController {
 
     private final LocalDate VOTE_DATE = LocalDate.now();
 
-    private boolean skipTimeLimit = false;
+    // skip time check for testing purposes
+    private boolean skipTimeCheck = false;
 
     @Autowired
     protected VoteRepository repository;
@@ -48,7 +49,7 @@ public class VoteController {
     @PostConstruct
     private void init() {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
-            skipTimeLimit = true;
+            skipTimeCheck = true;
         }
     }
 
@@ -73,7 +74,7 @@ public class VoteController {
         int userId = AuthUtil.get().id();
         log.info("vote restaurant {} user {}", restaurantId, userId);
 
-        if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeLimit) {
+        if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
             List<Vote> votes = repository.getByUserIdAndRestaurantId(userId, restaurantId, VOTE_DATE);
             Vote vote = !votes.isEmpty() ? votes.getFirst() : null;
             if (vote == null) {
