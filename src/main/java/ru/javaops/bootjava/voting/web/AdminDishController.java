@@ -58,7 +58,10 @@ public class AdminDishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
+    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
+        }
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));

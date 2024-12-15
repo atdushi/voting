@@ -43,7 +43,10 @@ public class AdminRestaurantController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
-    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo) {
+    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
+        }
         log.info("register {}", restaurantTo);
         checkNew(restaurantTo);
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
