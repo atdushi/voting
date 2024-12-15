@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.common.validation.ValidationUtil;
 import ru.javaops.bootjava.voting.util.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
@@ -56,8 +57,7 @@ public class AdminRestaurantController {
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
     public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
         if (result.hasErrors()) {
-            String errorFieldsMsg = extractErrors(result);
-            return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
+            return ValidationUtil.getErrorResponse(result);
         }
         log.info("update {}", restaurantTo);
         assureIdConsistent(restaurantTo, id);

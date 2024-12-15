@@ -1,6 +1,7 @@
 package ru.javaops.bootjava.common.validation;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import ru.javaops.bootjava.common.HasId;
 import ru.javaops.bootjava.common.error.IllegalRequestDataException;
@@ -25,9 +26,11 @@ public class ValidationUtil {
         }
     }
 
-    public static String extractErrors(BindingResult result){
-        return result.getFieldErrors().stream()
-                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.joining("<br>"));
+    public static ResponseEntity<String> getErrorResponse(BindingResult result) {
+        return ResponseEntity.unprocessableEntity().body(
+                result.getFieldErrors().stream()
+                        .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                        .collect(Collectors.joining("<br>"))
+        );
     }
 }
