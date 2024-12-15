@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.common.error.IllegalRequestDataException;
 import ru.javaops.bootjava.common.validation.ValidationUtil;
 import ru.javaops.bootjava.voting.util.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
@@ -55,13 +56,12 @@ public class AdminRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
-    public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
+    public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
         if (result.hasErrors()) {
-            return ValidationUtil.getErrorResponse(result);
+            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
         }
         log.info("update {}", restaurantTo);
         assureIdConsistent(restaurantTo, id);
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
-        return ResponseEntity.noContent().build();
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javaops.bootjava.common.error.IllegalRequestDataException;
 import ru.javaops.bootjava.common.validation.ValidationUtil;
 import ru.javaops.bootjava.voting.util.DishUtil;
 import ru.javaops.bootjava.voting.model.Dish;
@@ -42,9 +43,9 @@ public class AdminDishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody DishTo dishTo, BindingResult result) {
+    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo, BindingResult result) {
         if (result.hasErrors()) {
-            return ValidationUtil.getErrorResponse(result);
+            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
         }
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
@@ -52,7 +53,6 @@ public class AdminDishController {
         Dish newFromTo = DishUtil.createNewFromTo(dishTo);
         newFromTo.setDate(existed.getDate());
         repository.save(newFromTo);
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
