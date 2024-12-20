@@ -8,11 +8,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.javaops.bootjava.common.error.IllegalRequestDataException;
-import ru.javaops.bootjava.common.validation.ValidationUtil;
 import ru.javaops.bootjava.voting.util.RestaurantUtil;
 import ru.javaops.bootjava.voting.model.Restaurant;
 import ru.javaops.bootjava.voting.repository.RestaurantRepository;
@@ -43,10 +40,7 @@ public class AdminRestaurantController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
-    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
-        }
+    public ResponseEntity<Restaurant> register(@Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("register {}", restaurantTo);
         checkNew(restaurantTo);
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
@@ -59,10 +53,7 @@ public class AdminRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restaurantsWithRating", "restaurants"}, allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
-        }
+    public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("update {}", restaurantTo);
         assureIdConsistent(restaurantTo, id);
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));

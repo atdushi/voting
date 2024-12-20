@@ -43,10 +43,7 @@ public class AdminDishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
-        }
+    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo) {
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
         Dish existed = repository.getExisted(id);
@@ -58,10 +55,7 @@ public class AdminDishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result).toString());
-        }
+    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
