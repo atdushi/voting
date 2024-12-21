@@ -1,6 +1,5 @@
 package ru.javaops.bootjava.voting.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
