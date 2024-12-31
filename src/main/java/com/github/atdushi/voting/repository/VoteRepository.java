@@ -27,17 +27,17 @@ public interface VoteRepository extends BaseRepository<Vote> {
             SELECT v FROM Vote v
             WHERE (v.user.id = :userId AND :userId IS NOT NULL OR :userId IS NULL)
                 AND (v.restaurant.id = :restaurantId AND :restaurantId IS NOT NULL OR :restaurantId IS NULL)
-                AND v.created = :created""")
+                AND v.date = :date""")
     List<Vote> getByUserIdAndRestaurantId(
             @Param("userId") Integer userId,
             @Param("restaurantId") Integer restaurantId,
-            @Param("created") LocalDate created);
+            @Param("date") LocalDate date);
 
-    default List<Vote> getByUserId(Integer userId, LocalDate created) {
-        return getByUserIdAndRestaurantId(userId, null, created);
+    default List<Vote> getByUserId(Integer userId, LocalDate date) {
+        return getByUserIdAndRestaurantId(userId, null, date);
     }
 
-    default List<Vote> getByRestaurantId(Integer restaurantId, LocalDate created) {
-        return getByUserIdAndRestaurantId(null, restaurantId, created);
+    default List<Vote> getByRestaurantId(Integer restaurantId, LocalDate date) {
+        return getByUserIdAndRestaurantId(null, restaurantId, date);
     }
 }

@@ -23,8 +23,8 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "created", nullable = false, columnDefinition = "date default now()")
-    private LocalDate created;
+    @Column(name = "vote_date", nullable = false, columnDefinition = "date default now()")
+    private LocalDate date;
 
     public Vote(User user, Restaurant restaurant) {
         this(null, user, restaurant, LocalDate.now());
@@ -34,11 +34,11 @@ public class Vote extends BaseEntity {
         this(id, user, restaurant, LocalDate.now());
     }
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDate created) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate date) {
         this.id = id;
         this.user = user;
         this.restaurant = restaurant;
-        this.created = created;
+        this.date = date;
     }
 
     @Override

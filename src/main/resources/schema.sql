@@ -38,7 +38,7 @@ CREATE TABLE dish
     id            INTEGER DEFAULT NEXT VALUE FOR GLOBAL_SEQ PRIMARY KEY,
     name          VARCHAR(255)              NOT NULL,
     price         DECIMAL                   NOT NULL,
-    date          DATE DEFAULT current_date NOT NULL,
+    dish_date     DATE                      NOT NULL,
     restaurant_id INTEGER                   NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
 );
@@ -48,8 +48,7 @@ CREATE TABLE vote
     id            INTEGER DEFAULT NEXT VALUE FOR GLOBAL_SEQ PRIMARY KEY,
     user_id       INTEGER                 NOT NULL,
     restaurant_id INTEGER                 NOT NULL,
-    created       DATE DEFAULT now() NOT NULL,
+    vote_date     DATE DEFAULT now()      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX vote_unique_restaurant_idx ON vote (user_id, restaurant_id, created);

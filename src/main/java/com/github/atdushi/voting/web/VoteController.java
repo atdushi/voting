@@ -35,9 +35,7 @@ public class VoteController {
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
-    private final LocalDate VOTE_DATE = LocalDate.now();
-
-    // skip time check for testing purposes
+        // skip time check for testing purposes
     private boolean skipTimeCheck = false;
 
     @Autowired
@@ -60,7 +58,7 @@ public class VoteController {
 
     @GetMapping("/count-by-restaurant")
     public int countByRestaurant(@RequestParam int restaurantId) {
-        List<Vote> votes = repository.getByRestaurantId(restaurantId, VOTE_DATE);
+        List<Vote> votes = repository.getByRestaurantId(restaurantId, getVotingDate());
         return votes.size();
     }
 
@@ -75,12 +73,11 @@ public class VoteController {
         log.info("vote restaurant {} user {}", restaurantId, userId);
 
         if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
-            List<Vote> votes = repository.getByUserIdAndRestaurantId(userId, restaurantId, VOTE_DATE);
+            List<Vote> votes = repository.getByUserIdAndRestaurantId(userId, restaurantId, getVotingDate());
             Vote vote = !votes.isEmpty() ? votes.getFirst() : null;
             if (vote == null) {
                 vote = VoteUtil.createNew(userId, restaurantId);
             }
-            vote.setCreated(LocalDate.now());
             repository.save(vote);
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path(REST_URL + "/{id}")
@@ -89,5 +86,9 @@ public class VoteController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    private static LocalDate getVotingDate(){
+        return LocalDate.now();
     }
 }

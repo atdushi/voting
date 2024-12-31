@@ -12,13 +12,13 @@ INSERT INTO restaurant (name)
 VALUES ('ТОКИО-CITY'),
        ('Bahroma');
 
-INSERT INTO dish (name, price, restaurant_id, date)
+INSERT INTO dish (name, price, restaurant_id, dish_date)
 VALUES ('лазанья 1', 300.5, 100003, '2020-01-30'),
        ('лазанья 2', 300.5, 100003, '2020-01-30'),
        ('лазанья 3', 300.5, 100003, '2020-01-30'),
        ('лазанья 4', 300.5, 100003, '2020-01-30'),
        ('шашлык', 400.0, 100004, '2020-01-30');
 
-INSERT INTO vote (user_id, restaurant_id, created)
+INSERT INTO vote (user_id, restaurant_id, vote_date)
 VALUES (100000, 100003, '2020-01-30'),
        (100001, 100003, '2020-01-30');

@@ -24,7 +24,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             SELECT r
             FROM Vote v
             JOIN Restaurant r ON v.restaurant.id = r.id
-            WHERE v.created = :date
+            WHERE v.date = :date
             GROUP BY r
             ORDER BY COUNT(*) DESC
             """)
@@ -34,7 +34,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query(value = """
             select r.id, r.name, cast(sum(v1.cnt) as int) rating
             from restaurant r
-            left join (select v.*, 1 cnt from vote v where v.created = :date) v1 on v1.restaurant_id = r.id
+            left join (select v.*, 1 cnt from vote v where v.vote_date = :date) v1 on v1.restaurant_id = r.id
             group by r.id, r.name
             order by count(*) desc
             """, nativeQuery = true)
@@ -46,6 +46,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             FROM Restaurant r
             LEFT JOIN FETCH r.dishes d
             LEFT JOIN FETCH r.votes v
-            WHERE v.created = :date OR v.created IS NULL""")
+            WHERE v.date = :date OR v.date IS NULL""")
     List<Restaurant> findAllWithDishesAndVotes(LocalDate date);
 }

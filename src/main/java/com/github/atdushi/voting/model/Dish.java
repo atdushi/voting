@@ -25,7 +25,7 @@ public class Dish extends NamedEntity {
 //    @JsonBackReference // do not serialize
     private Restaurant restaurant;
 
-    @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
+    @Column(name = "dish_date", nullable = false)
     private Date date;
 
     public Dish(Integer id, String name, Double price) {
