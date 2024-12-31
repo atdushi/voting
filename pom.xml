@@ -11,8 +11,8 @@
     <groupId>com.github.atdushi</groupId>
     <artifactId>voting</artifactId>
     <version>1.0</version>
-    <name>Voting</name>
-    <description>Restaurant Voting Application</description>
+    <name>Restaurant Voting Application</name>
+    <description>TopJava graduation project application</description>
     <url>https://github.com/atdushi/voting</url>
 
     <properties>
