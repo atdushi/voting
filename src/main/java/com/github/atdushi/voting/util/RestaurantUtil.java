@@ -9,16 +9,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestaurantUtil {
+    private static final int DEFAULT_RATING = 0;
+
+    public static RestaurantTo getTo(Restaurant restaurant) {
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(), DEFAULT_RATING);
+    }
+
+    public static RestaurantTo getTo(RestaurantWithRating restaurantWithRating) {
+        return new RestaurantTo(
+                restaurantWithRating.getId(),
+                restaurantWithRating.getName(),
+                restaurantWithRating.getRating() == null ? DEFAULT_RATING : restaurantWithRating.getRating());
+    }
 
     public static List<RestaurantTo> getTos(Collection<RestaurantWithRating> restaurants) {
         return restaurants.stream()
-                .map(RestaurantTo::new)
+                .map(RestaurantUtil::getTo)
                 .collect(Collectors.toList());
     }
 
     public static List<RestaurantTo> getTos(List<Restaurant> restaurants) {
         return restaurants.stream()
-                .map(RestaurantTo::new)
+                .map(RestaurantUtil::getTo)
                 .collect(Collectors.toList());
     }
 

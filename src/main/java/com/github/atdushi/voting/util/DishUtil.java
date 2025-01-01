@@ -10,9 +10,13 @@ import java.util.stream.Collectors;
 
 public class DishUtil {
 
+    public static DishTo getTo(Dish dish) {
+        return new DishTo(dish.getId(), dish.getName(), dish.getPrice(), dish.getRestaurant().getId());
+    }
+
     public static List<DishTo> getTos(Collection<Dish> dishes) {
         return dishes.stream()
-                .map(DishTo::new)
+                .map(DishUtil::getTo)
                 .collect(Collectors.toList());
     }
 

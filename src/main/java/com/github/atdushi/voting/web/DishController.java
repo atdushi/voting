@@ -47,6 +47,6 @@ public class DishController {
 
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int id) {
-        return new DishTo(repository.findById(id).orElseThrow());
+        return DishUtil.getTo(repository.findById(id).orElseThrow());
     }
 }

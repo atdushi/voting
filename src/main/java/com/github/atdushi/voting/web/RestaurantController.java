@@ -31,15 +31,22 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id) {
-        return new RestaurantTo(repository.findById(id).orElseThrow());
+        return RestaurantUtil.getTo(repository.findById(id).orElseThrow());
     }
 
     @GetMapping
-    public List<RestaurantTo> getAll(@RequestParam(required = false) LocalDate date) {
+    public List<RestaurantTo> getAll() {
         log.info("getAll");
-        List<Restaurant> withDishesAndVotes = repository.findAllWithDishesAndVotes(date == null ? LocalDate.now() : date);
+        List<Restaurant> withDishesAndVotes = repository.findAll();
         return RestaurantUtil.getTos(withDishesAndVotes);
     }
+
+//    @GetMapping
+//    public List<RestaurantTo> getAll(@RequestParam(required = false) LocalDate date) {
+//        log.info("getAll ");
+//        List<Restaurant> withDishesAndVotes = repository.findAllWithDishesAndVotes(date == null ? LocalDate.now() : date);
+//        return RestaurantUtil.getTos(withDishesAndVotes);
+//    }
 
     @Parameters({
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
@@ -48,7 +55,8 @@ public class RestaurantController {
     public List<RestaurantTo> getAllByRating(@RequestParam(required = false) LocalDate date) {
         log.info("getAll by rating");
         List<RestaurantWithRating> all = repository.findAllByRatingDesc(date == null ? Date.valueOf(LocalDate.now()) : Date.valueOf(date));
-        return RestaurantUtil.getTos(all);
+        List<RestaurantTo> tos = RestaurantUtil.getTos(all);
+        return tos;
     }
 
     @Parameters({
@@ -59,6 +67,6 @@ public class RestaurantController {
     public RestaurantTo getTopRanked(@RequestParam(required = false) LocalDate date) {
         log.info("getTopRanked");
         Restaurant firstByRatingDesc = repository.findFirstByRatingDesc(date == null ? LocalDate.now() : date);
-        return new RestaurantTo(firstByRatingDesc);
+        return RestaurantUtil.getTo(firstByRatingDesc);
     }
 }

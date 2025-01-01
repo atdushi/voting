@@ -53,7 +53,7 @@ public class VoteController {
 
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {
-        return new VoteTo(repository.findById(id).orElseThrow());
+        return VoteUtil.getTo(repository.findById(id).orElseThrow());
     }
 
     @GetMapping("/count-by-restaurant")

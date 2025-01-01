@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.voting.util.DishUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,7 +40,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void update() throws Exception {
         Dish updated = getUpdated();
-        DishTo dishTo = new DishTo(updated);
+        DishTo dishTo = DishUtil.getTo(updated);
         String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
 
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + LASAGNA_1_ID)
@@ -55,7 +56,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void createNew() throws Exception {
         Dish newDish = getNew();
-        DishTo dishTo = new DishTo(newDish);
+        DishTo dishTo = DishUtil.getTo(newDish);
         String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
 
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
