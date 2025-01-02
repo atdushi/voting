@@ -30,7 +30,7 @@ public class RestaurantController {
     static final String REST_URL = "/api/restaurants";
 
     @Autowired
-    protected RestaurantRepository repository;
+    private RestaurantRepository repository;
 
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id, @RequestParam(required = false) Optional<LocalDate> date) {

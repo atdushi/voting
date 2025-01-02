@@ -28,7 +28,7 @@ public class AdminRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
     @Autowired
-    protected RestaurantRepository repository;
+    private RestaurantRepository repository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

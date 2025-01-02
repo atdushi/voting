@@ -25,7 +25,7 @@ public class DishController {
     static final String REST_URL = "/api/dishes";
 
     @Autowired
-    protected DishRepository repository;
+    private DishRepository repository;
 
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),

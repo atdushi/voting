@@ -28,7 +28,7 @@ public class AdminDishController {
     static final String REST_URL = "/api/admin/dishes";
 
     @Autowired
-    protected DishRepository repository;
+    private DishRepository repository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

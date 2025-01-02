@@ -35,11 +35,11 @@ public class VoteController {
 
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
-        // skip time check for testing purposes
+    // skip time check for testing purposes
     private boolean skipTimeCheck = false;
 
     @Autowired
-    protected VoteRepository repository;
+    private VoteRepository repository;
 
     @Autowired
     private Environment env;
