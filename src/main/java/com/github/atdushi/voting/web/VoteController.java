@@ -1,28 +1,26 @@
 package com.github.atdushi.voting.web;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.github.atdushi.app.AuthUtil;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.VoteRepository;
 import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Tag(name = "Vote", description = "API для голосования")
@@ -36,20 +34,11 @@ public class VoteController {
     static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
     // skip time check for testing purposes
-    private boolean skipTimeCheck = false;
+    @Value("${voting.skipTimeCheck}")
+    private boolean skipTimeCheck;
 
     @Autowired
     private VoteRepository repository;
-
-    @Autowired
-    private Environment env;
-
-    @PostConstruct
-    private void init() {
-        if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
-            skipTimeCheck = true;
-        }
-    }
 
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {
@@ -88,7 +77,7 @@ public class VoteController {
         }
     }
 
-    private static LocalDate getVotingDate(){
+    private static LocalDate getVotingDate() {
         return LocalDate.now();
     }
 }
