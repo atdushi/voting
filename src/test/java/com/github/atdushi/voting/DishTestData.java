@@ -33,7 +33,7 @@ public class DishTestData {
     }
 
     public static Dish getUpdated() {
-        return new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330, RestaurantTestData.tokyoCity, DATE);
+        return new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330, null, DATE);
     }
 
     public static String jsonWithRestaurantId(DishTo dishTo, Integer restaurantId) {

@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.common.util.JsonUtil;
 import com.github.atdushi.voting.util.DishUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = getUpdated();
         DishTo dishTo = DishUtil.getTo(updated);
-        String json = jsonWithRestaurantId(dishTo, dishTo.getRestaurantId());
+        String json = JsonUtil.writeValue(dishTo);
 
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + LASAGNA_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)

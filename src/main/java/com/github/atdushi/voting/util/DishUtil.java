@@ -15,7 +15,7 @@ public class DishUtil {
                 dish.getId(),
                 dish.getName(),
                 dish.getPrice(),
-                dish.getRestaurant().getId(),
+                dish.getRestaurant() != null ? dish.getRestaurant().getId() : null,
                 dish.getDate());
     }
 
