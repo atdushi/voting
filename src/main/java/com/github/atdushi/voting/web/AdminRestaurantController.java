@@ -6,6 +6,7 @@ import com.github.atdushi.voting.to.RestaurantTo;
 import com.github.atdushi.voting.util.RestaurantUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -24,12 +25,13 @@ import static com.github.atdushi.common.validation.ValidationUtil.checkNew;
 @Slf4j
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AdminRestaurantController {
 
     static final String REST_URL = "/api/admin/restaurants";
 
     @Autowired
-    private RestaurantRepository repository;
+    private final RestaurantRepository repository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

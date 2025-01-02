@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.github.atdushi.voting.util.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,12 +26,13 @@ import static com.github.atdushi.common.validation.ValidationUtil.*;
 @Slf4j
 @RestController
 @RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AdminDishController {
 
     static final String REST_URL = "/api/admin/dishes";
 
     @Autowired
-    private DishRepository repository;
+    private final DishRepository repository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

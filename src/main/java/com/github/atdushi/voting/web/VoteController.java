@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class VoteController {
 
     static final String REST_URL = "/api/votes";
@@ -38,7 +40,7 @@ public class VoteController {
     private boolean skipTimeCheck;
 
     @Autowired
-    private VoteRepository repository;
+    private final VoteRepository repository;
 
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {

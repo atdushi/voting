@@ -3,6 +3,7 @@ package com.github.atdushi.voting.web;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,12 +22,13 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class DishController {
 
     static final String REST_URL = "/api/dishes";
 
     @Autowired
-    private DishRepository repository;
+    private final DishRepository repository;
 
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),
