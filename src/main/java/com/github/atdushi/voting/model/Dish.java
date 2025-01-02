@@ -28,10 +28,6 @@ public class Dish extends NamedEntity {
     @Column(name = "dish_date", nullable = false, columnDefinition = "date")
     private LocalDate date;
 
-    public Dish(Integer id, String name, Integer price) {
-        this(id, name, price, LocalDate.now());
-    }
-
     public Dish(Integer id, String name, Integer price, LocalDate date) {
         super(id, name);
         this.price = price;

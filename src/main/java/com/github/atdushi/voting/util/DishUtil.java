@@ -11,7 +11,12 @@ import java.util.stream.Collectors;
 public class DishUtil {
 
     public static DishTo getTo(Dish dish) {
-        return new DishTo(dish.getId(), dish.getName(), dish.getPrice(), dish.getRestaurant().getId());
+        return new DishTo(
+                dish.getId(),
+                dish.getName(),
+                dish.getPrice(),
+                dish.getRestaurant().getId(),
+                dish.getDate());
     }
 
     public static List<DishTo> getTos(Collection<Dish> dishes) {
@@ -21,7 +26,7 @@ public class DishUtil {
     }
 
     public static Dish createNewFromTo(DishTo dishTo) {
-        Dish dish = new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice());
+        Dish dish = new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), dishTo.getDate());
         if (dishTo.getRestaurantId() != null) {
             dish.setRestaurant(new Restaurant(dishTo.getRestaurantId(), null));
         }
