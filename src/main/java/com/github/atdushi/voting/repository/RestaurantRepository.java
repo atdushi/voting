@@ -11,6 +11,7 @@ import com.github.atdushi.voting.model.RestaurantWithRating;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
@@ -28,7 +29,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             GROUP BY r
             ORDER BY COUNT(*) DESC
             """)
-    Restaurant findFirstByRatingDesc(LocalDate date);   // limit 1
+    Optional<Restaurant> findFirstByRatingDesc(LocalDate date);   // limit 1
 
     @Cacheable("restaurantsWithRating")
     @Query(value = """
@@ -40,12 +41,20 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc(Date date);
 
-    @Cacheable("restaurants")
     @Query("""
             SELECT r
             FROM Restaurant r
             LEFT JOIN FETCH r.dishes d
             LEFT JOIN FETCH r.votes v
-            WHERE v.date = :date OR v.date IS NULL""")
-    List<Restaurant> findAllWithDishesAndVotes(LocalDate date);
+            WHERE r.id = :id and v.date = :date""")
+    Optional<Restaurant> findWithDishes(int id, LocalDate date);
+
+//    @Cacheable("restaurants")
+//    @Query("""
+//            SELECT r
+//            FROM Restaurant r
+//            LEFT JOIN FETCH r.dishes d
+//            LEFT JOIN FETCH r.votes v
+//            WHERE v.date = :date OR v.date IS NULL""")
+//    List<Restaurant> findAllWithDishesAndVotes(LocalDate date);
 }

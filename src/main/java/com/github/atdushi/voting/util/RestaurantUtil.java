@@ -12,13 +12,18 @@ public class RestaurantUtil {
     private static final int DEFAULT_RATING = 0;
 
     public static RestaurantTo getTo(Restaurant restaurant) {
-        return new RestaurantTo(restaurant.getId(), restaurant.getName(), DEFAULT_RATING);
+        return new RestaurantTo(
+                restaurant.getId(),
+                restaurant.getName(),
+                DishUtil.getTos(restaurant.getDishes()),
+                null);
     }
 
     public static RestaurantTo getTo(RestaurantWithRating restaurantWithRating) {
         return new RestaurantTo(
                 restaurantWithRating.getId(),
                 restaurantWithRating.getName(),
+                null, // does not include dishes
                 restaurantWithRating.getRating() == null ? DEFAULT_RATING : restaurantWithRating.getRating());
     }
 

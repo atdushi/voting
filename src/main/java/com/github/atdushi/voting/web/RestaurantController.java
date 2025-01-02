@@ -1,5 +1,11 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.common.error.NotFoundException;
+import com.github.atdushi.voting.model.Restaurant;
+import com.github.atdushi.voting.model.RestaurantWithRating;
+import com.github.atdushi.voting.repository.RestaurantRepository;
+import com.github.atdushi.voting.to.RestaurantTo;
+import com.github.atdushi.voting.util.RestaurantUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,15 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.github.atdushi.voting.util.RestaurantUtil;
-import com.github.atdushi.voting.model.Restaurant;
-import com.github.atdushi.voting.repository.RestaurantRepository;
-import com.github.atdushi.voting.to.RestaurantTo;
-import com.github.atdushi.voting.model.RestaurantWithRating;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Restaurant", description = "API для работы с ресторанами")
 @Slf4j
@@ -30,15 +32,19 @@ public class RestaurantController {
     protected RestaurantRepository repository;
 
     @GetMapping("/{id}")
-    public RestaurantTo get(@PathVariable int id) {
-        return RestaurantUtil.getTo(repository.findById(id).orElseThrow());
+    public RestaurantTo get(@PathVariable int id, @RequestParam(required = false) Optional<LocalDate> date) {
+        log.info("get with dishes by id {}", id);
+        LocalDate dishDate = date.orElse(LocalDate.now());
+        Restaurant restaurant = repository.findWithDishes(id, dishDate)
+                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " and dish date=" + dishDate + " not found"));
+        return RestaurantUtil.getTo(restaurant);
     }
 
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("getAll");
-        List<Restaurant> withDishesAndVotes = repository.findAll();
-        return RestaurantUtil.getTos(withDishesAndVotes);
+        List<Restaurant> all = repository.findAll();
+        return RestaurantUtil.getTos(all);
     }
 
 //    @GetMapping
@@ -52,11 +58,11 @@ public class RestaurantController {
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     @GetMapping("/order-by-rating-desc")
-    public List<RestaurantTo> getAllByRating(@RequestParam(required = false) LocalDate date) {
-        log.info("getAll by rating");
-        List<RestaurantWithRating> all = repository.findAllByRatingDesc(date == null ? Date.valueOf(LocalDate.now()) : Date.valueOf(date));
-        List<RestaurantTo> tos = RestaurantUtil.getTos(all);
-        return tos;
+    public List<RestaurantTo> getAllByRating(@RequestParam(required = false) Optional<LocalDate> date) {
+        LocalDate votingDate = date.orElse(LocalDate.now());
+        log.info("getAll by rating desc on date {}", votingDate);
+        List<RestaurantWithRating> all = repository.findAllByRatingDesc(Date.valueOf(votingDate));
+        return RestaurantUtil.getTos(all);
     }
 
     @Parameters({
@@ -64,9 +70,11 @@ public class RestaurantController {
     })
     @GetMapping("/top-ranked")
     @Transactional
-    public RestaurantTo getTopRanked(@RequestParam(required = false) LocalDate date) {
-        log.info("getTopRanked");
-        Restaurant firstByRatingDesc = repository.findFirstByRatingDesc(date == null ? LocalDate.now() : date);
+    public RestaurantTo getTopRanked(@RequestParam(required = false) Optional<LocalDate> date) {
+        LocalDate votingDate = date.orElse(LocalDate.now());
+        log.info("getTopRanked on date {}", votingDate);
+        Restaurant firstByRatingDesc = repository.findFirstByRatingDesc(votingDate)
+                .orElseThrow(() -> new NotFoundException("Top ranked restaurant for the date=" + votingDate + " not found"));
         return RestaurantUtil.getTo(firstByRatingDesc);
     }
 }
