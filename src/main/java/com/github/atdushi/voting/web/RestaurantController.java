@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -40,19 +41,13 @@ public class RestaurantController {
         return RestaurantUtil.getTo(restaurant);
     }
 
+    @Cacheable("restaurants")
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("getAll");
         List<Restaurant> all = repository.findAll();
-        return RestaurantUtil.getTos(all);
+        return RestaurantUtil.getTos(all, false);
     }
-
-//    @GetMapping
-//    public List<RestaurantTo> getAll(@RequestParam(required = false) LocalDate date) {
-//        log.info("getAll ");
-//        List<Restaurant> withDishesAndVotes = repository.findAllWithDishesAndVotes(date == null ? LocalDate.now() : date);
-//        return RestaurantUtil.getTos(withDishesAndVotes);
-//    }
 
     @Parameters({
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")

@@ -31,7 +31,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             """)
     Optional<Restaurant> findFirstByRatingDesc(LocalDate date);   // limit 1
 
-    @Cacheable("restaurantsWithRating")
     @Query(value = """
             select r.id, r.name, cast(sum(v1.cnt) as int) rating
             from restaurant r
@@ -48,13 +47,4 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             LEFT JOIN FETCH r.votes v
             WHERE r.id = :id and v.date = :date""")
     Optional<Restaurant> findWithDishes(int id, LocalDate date);
-
-//    @Cacheable("restaurants")
-//    @Query("""
-//            SELECT r
-//            FROM Restaurant r
-//            LEFT JOIN FETCH r.dishes d
-//            LEFT JOIN FETCH r.votes v
-//            WHERE v.date = :date OR v.date IS NULL""")
-//    List<Restaurant> findAllWithDishesAndVotes(LocalDate date);
 }

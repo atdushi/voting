@@ -1,17 +1,17 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.AbstractControllerTest;
+import com.github.atdushi.user.UserTestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import com.github.atdushi.AbstractControllerTest;
-import com.github.atdushi.user.UserTestData;
 
+import static com.github.atdushi.voting.RestaurantTestData.*;
+import static com.github.atdushi.voting.web.RestaurantController.REST_URL;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.github.atdushi.voting.RestaurantTestData.*;
-import static com.github.atdushi.voting.web.RestaurantController.REST_URL;
 
 public class RestaurantControllerTest extends AbstractControllerTest {
 
@@ -20,7 +20,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TOKYO_CITY_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TOKYO_CITY_ID + "?date=" + DATE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472

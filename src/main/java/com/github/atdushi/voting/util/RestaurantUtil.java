@@ -11,11 +11,15 @@ import java.util.stream.Collectors;
 public class RestaurantUtil {
     private static final int DEFAULT_RATING = 0;
 
-    public static RestaurantTo getTo(Restaurant restaurant) {
+    public static RestaurantTo getTo(Restaurant restaurant){
+        return getTo(restaurant, false);
+    }
+
+    public static RestaurantTo getTo(Restaurant restaurant, boolean includeDishes) {
         return new RestaurantTo(
                 restaurant.getId(),
                 restaurant.getName(),
-                DishUtil.getTos(restaurant.getDishes()),
+                includeDishes ? DishUtil.getTos(restaurant.getDishes()) : null,
                 null);
     }
 
@@ -33,9 +37,9 @@ public class RestaurantUtil {
                 .collect(Collectors.toList());
     }
 
-    public static List<RestaurantTo> getTos(List<Restaurant> restaurants) {
+    public static List<RestaurantTo> getTos(List<Restaurant> restaurants, boolean includeDishes) {
         return restaurants.stream()
-                .map(RestaurantUtil::getTo)
+                .map(r -> getTo(r, includeDishes))
                 .collect(Collectors.toList());
     }
 

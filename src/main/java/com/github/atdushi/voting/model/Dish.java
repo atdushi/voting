@@ -17,8 +17,8 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dish extends NamedEntity {
 
-    @Column(name = "price", nullable = false, columnDefinition = "decimal")
-    private Double price;
+    @Column(name = "price", nullable = false, columnDefinition = "integer")
+    private Integer price;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
@@ -28,11 +28,11 @@ public class Dish extends NamedEntity {
     @Column(name = "dish_date", nullable = false)
     private Date date;
 
-    public Dish(Integer id, String name, Double price) {
+    public Dish(Integer id, String name, Integer price) {
         this(id, name, price, new Date());
     }
 
-    public Dish(Integer id, String name, Double price, Date date) {
+    public Dish(Integer id, String name, Integer price, Date date) {
         super(id, name);
         this.price = price;
         this.date = date;

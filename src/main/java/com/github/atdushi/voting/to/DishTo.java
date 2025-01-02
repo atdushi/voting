@@ -15,9 +15,9 @@ public class DishTo extends NamedTo {
     Integer restaurantId;
 
     @NotNull
-    Double price;
+    Integer price;
 
-    public DishTo(Integer id, String name, Double price, Integer restaurantId) {
+    public DishTo(Integer id, String name, Integer price, Integer restaurantId) {
         super(id, name);
         this.price = price;
         this.restaurantId = restaurantId;

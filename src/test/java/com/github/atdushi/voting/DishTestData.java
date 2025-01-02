@@ -20,22 +20,22 @@ public class DishTestData {
     public static final int SHASHLIK_ID = START_SEQ + 9;
     public static final int NOT_FOUND = 100;
 
-    public static final Dish lasagna1 = new Dish(LASAGNA_1_ID, "лазанья 1", 300.0);
-    public static final Dish lasagna2 = new Dish(LASAGNA_2_ID, "лазанья 2", 300.0);
-    public static final Dish lasagna3 = new Dish(LASAGNA_3_ID, "лазанья 3", 300.0);
-    public static final Dish lasagna4 = new Dish(LASAGNA_4_ID, "лазанья 4", 300.0);
-    public static final Dish shashlik = new Dish(SHASHLIK_ID, "шашлык", 400.0);
+    public static final Dish lasagna1 = new Dish(LASAGNA_1_ID, "лазанья 1", 300);
+    public static final Dish lasagna2 = new Dish(LASAGNA_2_ID, "лазанья 2", 300);
+    public static final Dish lasagna3 = new Dish(LASAGNA_3_ID, "лазанья 3", 300);
+    public static final Dish lasagna4 = new Dish(LASAGNA_4_ID, "лазанья 4", 300);
+    public static final Dish shashlik = new Dish(SHASHLIK_ID, "шашлык", 400);
 
     public static final LocalDate DATE = LocalDate.of(2020, 1, 30);
 
     public static Dish getNew() {
-        Dish dish = new Dish(null, "лазанья 5", 300.0);
+        Dish dish = new Dish(null, "лазанья 5", 300);
         dish.setRestaurant(RestaurantTestData.tokyoCity);
         return dish;
     }
 
     public static Dish getUpdated() {
-        Dish dish = new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330.0);
+        Dish dish = new Dish(LASAGNA_1_ID, "лазанья 1 новая", 330);
         dish.setRestaurant(RestaurantTestData.tokyoCity);
         return dish;
     }
