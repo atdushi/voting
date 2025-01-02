@@ -1,5 +1,9 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.voting.model.Restaurant;
+import com.github.atdushi.voting.repository.RestaurantRepository;
+import com.github.atdushi.voting.to.RestaurantTo;
+import com.github.atdushi.voting.util.RestaurantUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -10,14 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.github.atdushi.voting.util.RestaurantUtil;
-import com.github.atdushi.voting.model.Restaurant;
-import com.github.atdushi.voting.repository.RestaurantRepository;
-import com.github.atdushi.voting.to.RestaurantTo;
 
 import java.net.URI;
 
-import static com.github.atdushi.common.validation.ValidationUtil.*;
+import static com.github.atdushi.common.validation.ValidationUtil.assureIdConsistent;
+import static com.github.atdushi.common.validation.ValidationUtil.checkNew;
 
 @Tag(name = "Admin Restaurant", description = "API администратора для работы с ресторанами")
 @Slf4j
@@ -32,7 +33,7 @@ public class AdminRestaurantController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {"restaurants"}, allEntries = true)
+    @CacheEvict(value = {"restaurants", "dishes"}, allEntries = true)
     public void delete(@PathVariable int id) {
         repository.deleteExisted(id);
     }
@@ -45,7 +46,7 @@ public class AdminRestaurantController {
         checkNew(restaurantTo);
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL+ "/{id}")
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

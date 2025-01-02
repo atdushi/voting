@@ -8,7 +8,7 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import com.github.atdushi.common.model.NamedEntity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,14 +25,14 @@ public class Dish extends NamedEntity {
 //    @JsonBackReference // do not serialize
     private Restaurant restaurant;
 
-    @Column(name = "dish_date", nullable = false)
-    private Date date;
+    @Column(name = "dish_date", nullable = false, columnDefinition = "date")
+    private LocalDate date;
 
     public Dish(Integer id, String name, Integer price) {
-        this(id, name, price, new Date());
+        this(id, name, price, LocalDate.now());
     }
 
-    public Dish(Integer id, String name, Integer price, Date date) {
+    public Dish(Integer id, String name, Integer price, LocalDate date) {
         super(id, name);
         this.price = price;
         this.date = date;

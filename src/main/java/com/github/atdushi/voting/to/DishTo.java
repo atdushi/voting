@@ -1,6 +1,7 @@
 package com.github.atdushi.voting.to;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.github.atdushi.voting.util.View;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -11,7 +12,7 @@ import com.github.atdushi.common.to.NamedTo;
 public class DishTo extends NamedTo {
 
     @NotNull
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonView(View.CreateRead.class)    // can't update restaurantId
     Integer restaurantId;
 
     @NotNull

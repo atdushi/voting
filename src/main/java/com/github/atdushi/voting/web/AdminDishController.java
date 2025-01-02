@@ -1,5 +1,7 @@
 package com.github.atdushi.voting.web;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.github.atdushi.voting.util.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -32,27 +34,28 @@ public class AdminDishController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "restaurantDishes", allEntries = true)
+    @CacheEvict(value = "dishes", allEntries = true)
     public void delete(@PathVariable int id) {
         repository.deleteById(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody DishTo dishTo) {
+    @CacheEvict(value = "dishes", allEntries = true)
+    public void update(@PathVariable int id, @Valid @RequestBody @JsonView(View.Update.class) DishTo dishTo) {
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
         Dish existed = repository.getExisted(id);
         Dish newFromTo = DishUtil.createNewFromTo(dishTo);
+        newFromTo.setRestaurant(existed.getRestaurant());
         newFromTo.setDate(existed.getDate());
         repository.save(newFromTo);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = "restaurantDishes", allEntries = true)
-    public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
+    @CacheEvict(value = "dishes", allEntries = true)
+    public ResponseEntity<Dish> register(@Valid @RequestBody @JsonView(View.CreateRead.class) DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
