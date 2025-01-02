@@ -30,7 +30,7 @@ public class DishController {
 
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),
-            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
+            @Parameter(name = "date", description = "дата еды в ресторане (по умолчанию - текущая)")
     })
     @GetMapping
     public List<DishTo> getByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {

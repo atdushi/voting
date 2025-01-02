@@ -1,9 +1,6 @@
 package com.github.atdushi.voting.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import com.github.atdushi.common.model.NamedEntity;
@@ -28,9 +25,10 @@ public class Dish extends NamedEntity {
     @Column(name = "dish_date", nullable = false, columnDefinition = "date")
     private LocalDate date;
 
-    public Dish(Integer id, String name, Integer price, LocalDate date) {
+    public Dish(Integer id, String name, Integer price, Restaurant restaurant, LocalDate date) {
         super(id, name);
         this.price = price;
+        this.restaurant = restaurant;
         this.date = date;
     }
 }

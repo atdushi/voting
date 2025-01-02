@@ -26,7 +26,13 @@ public class DishUtil {
     }
 
     public static Dish createNewFromTo(DishTo dishTo) {
-        Dish dish = new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), dishTo.getDate());
+        Dish dish = new Dish(
+                dishTo.getId(),
+                dishTo.getName(),
+                dishTo.getPrice(),
+                new Restaurant(dishTo.getRestaurantId(), null),
+                dishTo.getDate());
+
         if (dishTo.getRestaurantId() != null) {
             dish.setRestaurant(new Restaurant(dishTo.getRestaurantId(), null));
         }
