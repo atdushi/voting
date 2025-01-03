@@ -37,7 +37,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             group by r.id, r.name
             order by count(*) desc
             """, nativeQuery = true)
-    List<RestaurantWithRating> findAllByRatingDesc(Date date);
+    List<RestaurantWithRating> findAllByRatingDesc(LocalDate date);
 
     @Query("""
             SELECT r
