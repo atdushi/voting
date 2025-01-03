@@ -7,6 +7,7 @@ import com.github.atdushi.user.model.User;
 import com.github.atdushi.voting.model.Vote;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -15,4 +16,6 @@ public interface VoteRepository extends BaseRepository<Vote> {
     long countByRestaurantAndDate(Restaurant restaurant, LocalDate date);
 
     Optional<Vote> getByUserAndDate(User user, LocalDate date);
+
+    List<Vote> getByUser(User user);
 }

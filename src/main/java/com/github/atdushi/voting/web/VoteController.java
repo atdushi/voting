@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.atdushi.voting.util.VoteUtil.TIME_LIMIT;
@@ -54,17 +56,28 @@ public class VoteController {
         return VoteUtil.getTo(voteRepository.getExisted(id));
     }
 
-    @Operation(summary = "голоса текущего пользователя за дату (по-умолчанию - текущая)")
-    @GetMapping
-    public VoteTo getVotesOfUser(@RequestParam(required = false) Optional<LocalDate> date) {
-        LocalDate voteDate = date.orElse(LocalDate.now());
+    @Operation(summary = "история голосов текущего пользователя")
+    @Parameters({
+            @Parameter(name = "date", description = "дата голосования (по-умолчанию - все)")
+    })
+    @GetMapping("/history")
+    public List<VoteTo> getVotesHistory(@RequestParam(required = false) Optional<LocalDate> date) {
         User user = AuthUtil.get().getUser();
-        log.info("get votes for user {} date {}", user.getId(), voteDate);
-        Optional<Vote> vote = voteRepository.getByUserAndDate(user, voteDate);
-        if (vote.isEmpty()) {
-            throw new NotFoundException("Vote not found");
+        log.info("get vote for user {} date {}", user.getId(), date);
+
+        if (date.isPresent()) {
+            Optional<Vote> vote = voteRepository.getByUserAndDate(user, date.get());
+            if (vote.isEmpty()) {
+                throw new NotFoundException("Vote not found");
+            }
+            return List.of(VoteUtil.getTo(vote.get()));
         }
-        return VoteUtil.getTo(vote.get());
+
+        List<Vote> votes = voteRepository.getByUser(user);
+        if (votes.isEmpty()) {
+            throw new NotFoundException("Votes not found");
+        }
+        return VoteUtil.getTos(votes);
     }
 
     @GetMapping("/count-by-restaurant")

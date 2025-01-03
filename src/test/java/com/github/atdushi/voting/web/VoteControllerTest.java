@@ -5,6 +5,7 @@ import com.github.atdushi.common.util.JsonUtil;
 import com.github.atdushi.user.UserTestData;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.VoteRepository;
+import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -15,9 +16,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
+import java.util.List;
 
 import static com.github.atdushi.voting.VoteTestData.*;
 import static com.github.atdushi.voting.web.VoteController.REST_URL;
@@ -40,6 +40,19 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(VOTETO_MATCHER.contentJson(TokyoVoteTo1));
+    }
+
+    @Test
+    @WithUserDetails(value = UserTestData.USER_MAIL)
+    void getVotesHistory() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(
+                REST_URL_SLASH + "history"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        List<?> list = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), List.class);
+        assert !list.isEmpty();
     }
 
     @Test

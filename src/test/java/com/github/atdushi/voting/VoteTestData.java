@@ -23,7 +23,7 @@ public class VoteTestData {
     public static final int TOKYO_VOTE_2_ID = START_SEQ + 11;
 
     public static Vote TokyoVote1 = new Vote(TOKYO_VOTE_1_ID, UserTestData.user, RestaurantTestData.tokyoCity);
-    public static VoteTo TokyoVoteTo1 = new VoteTo(TOKYO_VOTE_1_ID, UserTestData.user.getId(), RestaurantTestData.tokyoCity.getId());
+    public static VoteTo TokyoVoteTo1 = new VoteTo(TOKYO_VOTE_1_ID, UserTestData.user.getId(), RestaurantTestData.tokyoCity.getId(), VOTE_DATE);
 
     public static Vote getNew() {
         return new Vote(null, UserTestData.user, RestaurantTestData.bahroma);
