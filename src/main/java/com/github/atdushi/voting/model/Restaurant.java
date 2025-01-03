@@ -1,11 +1,13 @@
 package com.github.atdushi.voting.model;
 
+import com.github.atdushi.common.model.NamedEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import jakarta.persistence.*;
-import com.github.atdushi.common.model.NamedEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,10 +30,10 @@ public class Restaurant extends NamedEntity {
     }
 
     public List<Dish> getDishes() {
-        return dishes == null ? Collections.emptyList() : dishes.stream().toList();
+        return dishes == null ? Collections.emptyList() : List.copyOf(dishes);
     }
 
     public List<Vote> getVotes() {
-        return votes == null ? Collections.emptyList() : votes.stream().toList();
+        return votes == null ? Collections.emptyList() : List.copyOf(votes);
     }
 }

@@ -1,7 +1,12 @@
 package com.github.atdushi.voting.web;
 
 import com.github.atdushi.app.AuthUtil;
+import com.github.atdushi.common.error.IllegalRequestDataException;
+import com.github.atdushi.common.error.NotFoundException;
+import com.github.atdushi.user.model.User;
+import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.Vote;
+import com.github.atdushi.voting.repository.RestaurantRepository;
 import com.github.atdushi.voting.repository.VoteRepository;
 import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
@@ -22,7 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
@@ -40,42 +45,71 @@ public class VoteController {
     private boolean skipTimeCheck;
 
     @Autowired
-    private final VoteRepository repository;
+    private final VoteRepository voteRepository;
+
+    @Autowired
+    private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {
-        return VoteUtil.getTo(repository.findById(id).orElseThrow());
+        return VoteUtil.getTo(voteRepository.getExisted(id));
+    }
+
+    @Operation(summary = "голоса текущего пользователя за дату (по-умолчанию - текущая)")
+    @GetMapping
+    public VoteTo getVotesOfUser(@RequestParam(required = false) Optional<LocalDate> date) {
+        LocalDate voteDate = date.orElse(LocalDate.now());
+        User user = AuthUtil.get().getUser();
+        log.info("get votes for user {} date {}", user.getId(), voteDate);
+        Optional<Vote> vote = voteRepository.getByUserAndDate(user, voteDate);
+        if (vote.isEmpty()) {
+            throw new NotFoundException("Vote not found");
+        }
+        return VoteUtil.getTo(vote.get());
     }
 
     @GetMapping("/count-by-restaurant")
-    public int countByRestaurant(@RequestParam int restaurantId) {
-        List<Vote> votes = repository.getByRestaurantId(restaurantId, getVotingDate());
-        return votes.size();
+    @Parameters({
+            @Parameter(name = "restaurantId", description = "id ресторана"),
+            @Parameter(name = "date", description = "дата голосования (по-умолчанию - текущая)")
+    })
+    public long countByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
+        LocalDate voteDate = date.orElse(LocalDate.now());
+        Restaurant existed = restaurantRepository.getExisted(restaurantId);
+        return voteRepository.countByRestaurantAndDate(existed, voteDate);
     }
 
-    @Operation(summary = "учитываются голоса только до 11:00")
+    @Operation(summary = "голосование за ресторан, повторные голоса учитываются только до 11:00")
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана")
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{restaurantId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vote> vote(@RequestBody int restaurantId) {
-        int userId = AuthUtil.get().id();
-        log.info("vote restaurant {} user {}", restaurantId, userId);
+    public ResponseEntity<Vote> vote(@PathVariable int restaurantId) {
+        User user = AuthUtil.get().getUser();
+        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
+        log.info("vote restaurant {} user {}", restaurant, user);
 
-        if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
-            List<Vote> votes = repository.getByUserIdAndRestaurantId(userId, restaurantId, getVotingDate());
-            Vote vote = !votes.isEmpty() ? votes.getFirst() : null;
-            if (vote == null) {
-                vote = VoteUtil.createNew(userId, restaurantId);
-            }
-            repository.save(vote);
+        Optional<Vote> existed = voteRepository.getByUserAndDate(user, getVotingDate());
+
+        if (existed.isEmpty()) {
+            Vote vote = VoteUtil.createNew(user.id(), restaurantId);
+            voteRepository.save(vote);
+
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path(REST_URL + "/{id}")
                     .buildAndExpand(vote.getId()).toUri();
+
             return ResponseEntity.created(uriOfNewResource).body(vote);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            // re-vote
+            if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
+                existed.get().setRestaurant(restaurant);
+                voteRepository.save(existed.get());
+                return ResponseEntity.ok(existed.get());
+            } else {
+                throw new IllegalRequestDataException("Can't re-vote after " + TIME_LIMIT + " a.m.");
+            }
         }
     }
 

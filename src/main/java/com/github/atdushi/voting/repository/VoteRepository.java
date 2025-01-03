@@ -1,43 +1,18 @@
 package com.github.atdushi.voting.repository;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import com.github.atdushi.voting.model.Restaurant;
 import org.springframework.transaction.annotation.Transactional;
 import com.github.atdushi.common.BaseRepository;
 import com.github.atdushi.user.model.User;
-import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.Vote;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends BaseRepository<Vote> {
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Vote v WHERE v.user.id = :#{#user.id()}")
-    int delete(@Param("user") User user);
+    long countByRestaurantAndDate(Restaurant restaurant, LocalDate date);
 
-    @Query("SELECT v FROM Vote v WHERE v.restaurant.id = :#{#restaurant.id()}")
-    List<Vote> getAll(@Param("restaurant") Restaurant restaurant);
-
-    @Query("""
-            SELECT v FROM Vote v
-            WHERE (v.user.id = :userId AND :userId IS NOT NULL OR :userId IS NULL)
-                AND (v.restaurant.id = :restaurantId AND :restaurantId IS NOT NULL OR :restaurantId IS NULL)
-                AND v.date = :date""")
-    List<Vote> getByUserIdAndRestaurantId(
-            @Param("userId") Integer userId,
-            @Param("restaurantId") Integer restaurantId,
-            @Param("date") LocalDate date);
-
-    default List<Vote> getByUserId(Integer userId, LocalDate date) {
-        return getByUserIdAndRestaurantId(userId, null, date);
-    }
-
-    default List<Vote> getByRestaurantId(Integer restaurantId, LocalDate date) {
-        return getByUserIdAndRestaurantId(null, restaurantId, date);
-    }
+    Optional<Vote> getByUserAndDate(User user, LocalDate date);
 }

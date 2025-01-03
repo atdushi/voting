@@ -1,22 +1,22 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.AbstractControllerTest;
+import com.github.atdushi.common.util.JsonUtil;
+import com.github.atdushi.user.UserTestData;
+import com.github.atdushi.voting.model.Vote;
+import com.github.atdushi.voting.repository.VoteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import com.github.atdushi.AbstractControllerTest;
-import com.github.atdushi.common.util.JsonUtil;
-import com.github.atdushi.user.UserTestData;
-import com.github.atdushi.voting.model.Vote;
-import com.github.atdushi.voting.repository.VoteRepository;
 
+import static com.github.atdushi.voting.VoteTestData.*;
+import static com.github.atdushi.voting.web.VoteController.REST_URL;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.github.atdushi.voting.VoteTestData.*;
-import static com.github.atdushi.voting.web.VoteController.REST_URL;
 
 public class VoteControllerTest extends AbstractControllerTest {
 
@@ -64,9 +64,7 @@ public class VoteControllerTest extends AbstractControllerTest {
 
     private Vote vote(Vote newVote) throws Exception {
         assert newVote.getRestaurant().getId() != null;
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(newVote.getRestaurant().getId().toString()))
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().getId()))
                 .andExpect(status().isCreated());
         return VOTE_MATCHER.readFromJson(action);
     }
