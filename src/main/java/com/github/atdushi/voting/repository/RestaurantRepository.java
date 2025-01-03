@@ -1,6 +1,5 @@
 package com.github.atdushi.voting.repository;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;

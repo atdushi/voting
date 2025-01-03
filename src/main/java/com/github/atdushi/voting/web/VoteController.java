@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import static com.github.atdushi.voting.util.VoteUtil.TIME_LIMIT;
+
 @Tag(name = "Vote", description = "API для голосования")
 @Slf4j
 @RestController
@@ -37,12 +38,6 @@ import java.util.Optional;
 public class VoteController {
 
     static final String REST_URL = "/api/votes";
-
-    static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
-
-    // skip time check for testing purposes
-    @Value("${voting.skipTimeCheck}")
-    private boolean skipTimeCheck;
 
     @Autowired
     private final VoteRepository voteRepository;
@@ -90,7 +85,8 @@ public class VoteController {
         Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         log.info("vote restaurant {} user {}", restaurant, user);
 
-        Optional<Vote> existed = voteRepository.getByUserAndDate(user, getVotingDate());
+        LocalDate votingDate = getVotingDate();
+        Optional<Vote> existed = voteRepository.getByUserAndDate(user, votingDate);
 
         if (existed.isEmpty()) {
             Vote vote = VoteUtil.createNew(user.id(), restaurantId);
@@ -103,9 +99,11 @@ public class VoteController {
             return ResponseEntity.created(uriOfNewResource).body(vote);
         } else {
             // re-vote
-            if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
-                existed.get().setRestaurant(restaurant);
-                voteRepository.save(existed.get());
+            if (LocalTime.now().isBefore(TIME_LIMIT)) {
+                if (existed.get().getRestaurant().id() != restaurantId) {
+                    existed.get().setRestaurant(restaurant);
+                    voteRepository.save(existed.get());
+                }
                 return ResponseEntity.ok(existed.get());
             } else {
                 throw new IllegalRequestDataException("Can't re-vote after " + TIME_LIMIT + " a.m.");

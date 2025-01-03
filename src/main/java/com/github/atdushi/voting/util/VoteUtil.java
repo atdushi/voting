@@ -5,11 +5,14 @@ import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.to.VoteTo;
 
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class VoteUtil {
+
+    public static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);
 
     public static Vote createNew(Integer userId, Integer restaurantId) {
         User user = new User(userId, null, null, null);
