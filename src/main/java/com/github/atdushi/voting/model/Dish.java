@@ -17,7 +17,7 @@ public class Dish extends NamedEntity {
     @Column(name = "price", nullable = false, columnDefinition = "integer")
     private Integer price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
