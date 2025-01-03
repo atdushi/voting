@@ -1,12 +1,14 @@
 package com.github.atdushi.common.model;
 
+import com.github.atdushi.common.HasId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
-import com.github.atdushi.common.HasId;
+
+import java.util.Objects;
 
 @MappedSuperclass
 //  https://stackoverflow.com/a/6084701/548473
@@ -33,22 +35,37 @@ public abstract class BaseEntity implements Persistable<Integer>, HasId {
         return id == null;
     }
 
-    //    https://stackoverflow.com/questions/1638723
+    // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
+        if (o == null) {
             return false;
         }
+
+        Class<?> oEffectiveClass = o instanceof HibernateProxy
+                ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+                : o.getClass();
+
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+                : this.getClass();
+
+        if (thisEffectiveClass != oEffectiveClass) {
+            return false;
+        }
+
         BaseEntity that = (BaseEntity) o;
-        return id != null && id.equals(that.id);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id;
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+                : getClass().hashCode();
     }
 
     @Override
