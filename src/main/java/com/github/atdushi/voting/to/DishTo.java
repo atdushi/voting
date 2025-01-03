@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class DishTo extends NamedTo {
 
+    @NotNull
     @JsonView(View.CreateRead.class)    // can't update
     Integer restaurantId;
 

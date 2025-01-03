@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.github.atdushi.voting.util.DishUtil;
@@ -44,7 +45,7 @@ public class AdminDishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "dishes", allEntries = true)
-    public void update(@PathVariable int id, @Valid @RequestBody @JsonView(View.Update.class) DishTo dishTo) {
+    public void update(@PathVariable int id, @Validated(View.Update.class) @JsonView(View.Update.class) @RequestBody DishTo dishTo) {
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
         Dish existed = repository.getExisted(id);
@@ -57,7 +58,7 @@ public class AdminDishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "dishes", allEntries = true)
-    public ResponseEntity<Dish> register(@Valid @RequestBody @JsonView(View.CreateRead.class) DishTo dishTo) {
+    public ResponseEntity<Dish> register(@Validated(View.CreateRead.class) @JsonView(View.CreateRead.class) @RequestBody DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
