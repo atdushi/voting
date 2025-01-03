@@ -19,7 +19,6 @@ public class Dish extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
-//    @JsonBackReference // do not serialize
     private Restaurant restaurant;
 
     @Column(name = "dish_date", nullable = false, columnDefinition = "date")

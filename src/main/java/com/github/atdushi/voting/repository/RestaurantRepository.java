@@ -7,7 +7,6 @@ import com.github.atdushi.common.BaseRepository;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,16 +18,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Modifying
     @Query("DELETE FROM Restaurant r WHERE r.id = ?1")
     int delete(int id);
-
-    @Query("""
-            SELECT r
-            FROM Vote v
-            JOIN Restaurant r ON v.restaurant.id = r.id
-            WHERE v.date = :date
-            GROUP BY r
-            ORDER BY COUNT(*) DESC
-            """)
-    Optional<Restaurant> findFirstByRatingDesc(LocalDate date);   // limit 1
 
     @Query(value = """
             select r.id, r.name, cast(sum(v1.cnt) as int) rating

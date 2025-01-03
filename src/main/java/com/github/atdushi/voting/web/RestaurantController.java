@@ -14,10 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -60,18 +58,5 @@ public class RestaurantController {
         log.info("getAll by rating desc on date {}", votingDate);
         List<RestaurantWithRating> all = repository.findAllByRatingDesc(votingDate);
         return RestaurantUtil.getTos(all);
-    }
-
-    @Parameters({
-            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
-    })
-    @GetMapping("/top-ranked")
-    @Transactional
-    public RestaurantTo getTopRanked(@RequestParam(required = false) Optional<LocalDate> date) {
-        LocalDate votingDate = date.orElse(LocalDate.now());
-        log.info("getTopRanked on date {}", votingDate);
-        Restaurant firstByRatingDesc = repository.findFirstByRatingDesc(votingDate)
-                .orElseThrow(() -> new NotFoundException("Top ranked restaurant for the date=" + votingDate + " not found"));
-        return RestaurantUtil.getTo(firstByRatingDesc);
     }
 }

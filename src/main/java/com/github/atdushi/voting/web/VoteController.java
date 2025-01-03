@@ -45,6 +45,10 @@ public class VoteController {
     @Autowired
     private final RestaurantRepository restaurantRepository;
 
+    @Operation(summary = "информация о голосе")
+    @Parameters({
+            @Parameter(name = "id", description = "id голоса")
+    })
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id) {
         return VoteUtil.getTo(voteRepository.getExisted(id));

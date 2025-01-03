@@ -9,7 +9,7 @@ import static com.github.atdushi.user.UserTestData.START_SEQ;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "votes", "dishes");// "dishes.restaurant", "dishes.date");
+            MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "votes", "dishes");
 
     public static final LocalDate DATE = LocalDate.of(2020, 1, 30);
 
@@ -22,10 +22,7 @@ public class RestaurantTestData {
 
     static {
         tokyoCity = new Restaurant(TOKYO_CITY_ID, "ТОКИО-CITY");
-//        tokyoCity.setDishes(Set.of(DishTestData.lasagna));
-
         bahroma = new Restaurant(BAHROMA_ID, "Bahroma");
-//        bahroma.setDishes(Set.of(DishTestData.shashlik));
     }
 
     public static Restaurant getNew() {
