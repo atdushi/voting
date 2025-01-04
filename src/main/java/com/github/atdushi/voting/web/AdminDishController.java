@@ -51,7 +51,6 @@ public class AdminDishController {
         Dish existed = repository.getExisted(id);
         Dish newFromTo = DishUtil.createNewFromTo(dishTo);
         newFromTo.setRestaurant(existed.getRestaurant());
-        newFromTo.setDate(existed.getDate());
         repository.save(newFromTo);
     }
 
