@@ -20,7 +20,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TOKYO_CITY_ID + "?date=" + DATE))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + TOKYO_CITY_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472

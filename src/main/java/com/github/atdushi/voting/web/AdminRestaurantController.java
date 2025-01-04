@@ -57,7 +57,8 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restaurants"}, allEntries = true)
     public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo) {
-        log.info("update {}", restaurantTo);
+        log.info("update restaurant with id={}", id);
+        repository.getExisted(id);
         assureIdConsistent(restaurantTo, id);
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
     }

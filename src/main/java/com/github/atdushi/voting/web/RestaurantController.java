@@ -1,6 +1,5 @@
 package com.github.atdushi.voting.web;
 
-import com.github.atdushi.common.error.NotFoundException;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 import com.github.atdushi.voting.repository.RestaurantRepository;
@@ -33,11 +32,9 @@ public class RestaurantController {
     private final RestaurantRepository repository;
 
     @GetMapping("/{id}")
-    public RestaurantTo get(@PathVariable int id, @RequestParam(required = false) Optional<LocalDate> date) {
+    public RestaurantTo get(@PathVariable int id) {
         log.info("get with dishes by id {}", id);
-        LocalDate dishDate = date.orElse(LocalDate.now());
-        Restaurant restaurant = repository.findWithDishes(id, dishDate)
-                .orElseThrow(() -> new NotFoundException("Restaurant with id=" + id + " and dish date=" + dishDate + " not found"));
+        Restaurant restaurant = repository.getExisted(id);
         return RestaurantUtil.getTo(restaurant);
     }
 
