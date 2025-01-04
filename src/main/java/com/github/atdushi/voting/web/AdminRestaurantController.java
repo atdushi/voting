@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.common.error.NotFoundException;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.repository.RestaurantRepository;
 import com.github.atdushi.voting.to.RestaurantTo;
@@ -58,8 +59,10 @@ public class AdminRestaurantController {
     @CacheEvict(value = {"restaurants"}, allEntries = true)
     public void update(@PathVariable int id, @Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("update restaurant with id={}", id);
-        repository.getExisted(id);
         assureIdConsistent(restaurantTo, id);
+        if (!repository.existsById(id)) {
+            throw new NotFoundException("Restaurant with id=" + id + " not found");
+        }
         repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
     }
 }
