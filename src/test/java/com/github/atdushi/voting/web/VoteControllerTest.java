@@ -3,9 +3,9 @@ package com.github.atdushi.voting.web;
 import com.github.atdushi.AbstractControllerTest;
 import com.github.atdushi.common.util.JsonUtil;
 import com.github.atdushi.user.UserTestData;
+import com.github.atdushi.voting.RestaurantTestData;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.VoteRepository;
-import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -16,6 +16,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -28,6 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + '/';
+
+    private static final int EPOCH_SECOND = 1643533200; // 2022-01-30
+    private static final LocalTime ALLOWED_TIME = VoteUtil.TIME_LIMIT.minusHours(1L);
+    private static final LocalTime FORBIDDEN_TIME = VoteUtil.TIME_LIMIT.plusHours(1L);
 
     @Autowired
     private VoteRepository repository;
@@ -58,25 +64,29 @@ public class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void countByRestaurant() throws Exception {
-        Vote newVote = getNew();
-        Vote created = vote(newVote);
-
         ResultActions action = perform(MockMvcRequestBuilders.get(
-                REST_URL_SLASH + "count-by-restaurant?restaurantId=" + created.getRestaurant().getId()))
+                REST_URL_SLASH + "count-by-restaurant?restaurantId=" + RestaurantTestData.TOKYO_CITY_ID + "&date=" + VOTE_DATE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
         Integer i = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), Integer.class);
-        assert i == 1;
+        assert i == 2;
     }
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void revoteAllowed() throws Exception {
-        LocalTime allowedTime = VoteUtil.TIME_LIMIT.minusHours(1L);
-        try (MockedStatic<LocalTime> timeMock = Mockito.mockStatic(LocalTime.class)) {
-            timeMock.when(LocalTime::now).thenReturn(allowedTime);
+        Clock spyClock = Mockito.spy(Clock.systemDefaultZone());
+
+        try (MockedStatic<Clock> clockMock = Mockito.mockStatic(Clock.class);
+             MockedStatic<LocalTime> timeMock = Mockito.mockStatic(LocalTime.class)) {
+
+            timeMock.when(LocalTime::now).thenReturn(ALLOWED_TIME);
+            clockMock.when(Clock::systemDefaultZone).thenReturn(spyClock);
+            clockMock.when(Clock::systemUTC).thenReturn(spyClock);
+            Mockito.when(spyClock.instant()).thenReturn(Instant.ofEpochSecond(EPOCH_SECOND));
+
             Vote newVote = getNew();
             vote(newVote);
             perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().getId()))
@@ -87,25 +97,44 @@ public class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void revoteForbidden() throws Exception {
-        LocalTime forbiddenTime = VoteUtil.TIME_LIMIT.plusHours(1L);
-        try (MockedStatic<LocalTime> timeMock = Mockito.mockStatic(LocalTime.class)) {
-            timeMock.when(LocalTime::now).thenReturn(forbiddenTime);
+        Clock spyClock = Mockito.spy(Clock.systemDefaultZone());
+
+        try (MockedStatic<Clock> clockMock = Mockito.mockStatic(Clock.class);
+             MockedStatic<LocalTime> timeMock = Mockito.mockStatic(LocalTime.class)) {
+
+            timeMock.when(LocalTime::now).thenReturn(FORBIDDEN_TIME);
+            clockMock.when(Clock::systemDefaultZone).thenReturn(spyClock);
+            clockMock.when(Clock::systemUTC).thenReturn(spyClock);
+            Mockito.when(spyClock.instant()).thenReturn(Instant.ofEpochSecond(EPOCH_SECOND));
+
             Vote newVote = getNew();
             vote(newVote);
             perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().getId()))
                     .andExpect(status().isUnprocessableEntity());
+
         }
     }
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
     void createNew() throws Exception {
-        Vote newVote = getNew();
-        Vote created = vote(newVote);
-        int newId = created.id();
-        newVote.setId(newId);
-        VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+        Clock spyClock = Mockito.spy(Clock.systemDefaultZone());
+
+        try (MockedStatic<Clock> clockMock = Mockito.mockStatic(Clock.class);
+             MockedStatic<LocalTime> timeMock = Mockito.mockStatic(LocalTime.class)) {
+
+            timeMock.when(LocalTime::now).thenReturn(ALLOWED_TIME);
+            clockMock.when(Clock::systemDefaultZone).thenReturn(spyClock);
+            clockMock.when(Clock::systemUTC).thenReturn(spyClock);
+            Mockito.when(spyClock.instant()).thenReturn(Instant.ofEpochSecond(EPOCH_SECOND));
+
+            Vote newVote = getNew();
+            Vote created = vote(newVote);
+            int newId = created.id();
+            newVote.setId(newId);
+            VOTE_MATCHER.assertMatch(created, newVote);
+            VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+        }
     }
 
     private Vote vote(Vote newVote) throws Exception {

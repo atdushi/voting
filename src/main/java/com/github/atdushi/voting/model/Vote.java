@@ -23,7 +23,7 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "vote_date", nullable = false, columnDefinition = "date default now()")
+    @Column(name = "vote_date", nullable = false, columnDefinition = "date default current_date")
     private LocalDate date;
 
     public Vote(User user, Restaurant restaurant) {

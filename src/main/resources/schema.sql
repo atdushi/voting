@@ -46,9 +46,9 @@ CREATE TABLE dish
 CREATE TABLE vote
 (
     id            INTEGER DEFAULT NEXT VALUE FOR GLOBAL_SEQ PRIMARY KEY,
-    user_id       INTEGER                 NOT NULL,
-    restaurant_id INTEGER                 NOT NULL,
-    vote_date     DATE DEFAULT now()      NOT NULL,
+    user_id       INTEGER                   NOT NULL,
+    restaurant_id INTEGER                   NOT NULL,
+    vote_date     DATE DEFAULT current_date NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
 );

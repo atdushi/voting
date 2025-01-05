@@ -19,8 +19,8 @@ public class VoteTestData {
 
     public static LocalDate VOTE_DATE = LocalDate.of(2020, 1, 30);
 
-    public static final int TOKYO_VOTE_1_ID = START_SEQ + 10;
-    public static final int TOKYO_VOTE_2_ID = START_SEQ + 11;
+    public static final int TOKYO_VOTE_1_ID = START_SEQ + 14;
+    public static final int TOKYO_VOTE_2_ID = START_SEQ + 15;
 
     public static Vote TokyoVote1 = new Vote(TOKYO_VOTE_1_ID, UserTestData.user, RestaurantTestData.tokyoCity);
     public static VoteTo TokyoVoteTo1 = new VoteTo(TOKYO_VOTE_1_ID, UserTestData.user.getId(), RestaurantTestData.tokyoCity.getId(), VOTE_DATE);
