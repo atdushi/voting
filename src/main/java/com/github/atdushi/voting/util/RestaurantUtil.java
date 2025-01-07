@@ -46,4 +46,8 @@ public class RestaurantUtil {
     public static Restaurant createNewFromTo(RestaurantTo restaurantTo) {
         return new Restaurant(restaurantTo.getId(), restaurantTo.getName());
     }
+
+    public static Restaurant createNewFromId(Integer restaurantId) {
+        return new Restaurant(restaurantId, null);
+    }
 }

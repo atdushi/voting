@@ -1,5 +1,11 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.voting.model.Dish;
+import com.github.atdushi.voting.model.Restaurant;
+import com.github.atdushi.voting.repository.DishRepository;
+import com.github.atdushi.voting.to.DishTo;
+import com.github.atdushi.voting.util.DishUtil;
+import com.github.atdushi.voting.util.RestaurantUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import com.github.atdushi.voting.util.DishUtil;
-import com.github.atdushi.voting.model.Dish;
-import com.github.atdushi.voting.repository.DishRepository;
-import com.github.atdushi.voting.to.DishTo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,14 +33,18 @@ public class DishController {
     private final DishRepository repository;
 
     @Parameters({
-            @Parameter(name = "restaurantId", description = "id ресторана"),
+            @Parameter(name = "restaurantId", description = "id ресторана (по умолчанию - все)"),
             @Parameter(name = "date", description = "дата еды в ресторане (по умолчанию - текущая)")
     })
     @GetMapping
-    public List<DishTo> getByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
-        log.info("get all by restaurant {}", restaurantId);
+    public List<DishTo> getByRestaurantAndDate(@RequestParam(required = false) Optional<Integer> restaurantId,
+                                        @RequestParam(required = false) Optional<LocalDate> date) {
+        log.info("get all by restaurant {} and date {}", restaurantId, date);
         LocalDate dishDate = date.orElse(LocalDate.now());
-        List<Dish> all = repository.getByRestaurantId(restaurantId, dishDate);
+        if (restaurantId.isEmpty()) {
+            return DishUtil.getTos(repository.getByDateOrderByRestaurantNameAscNameAsc(dishDate));
+        }
+        List<Dish> all = repository.getByRestaurantAndDateOrderByNameAsc(RestaurantUtil.createNewFromId(restaurantId.get()), dishDate);
         return DishUtil.getTos(all);
     }
 
@@ -46,17 +52,5 @@ public class DishController {
     public DishTo get(@PathVariable int id) {
         log.info("get dish {}", id);
         return DishUtil.getTo(repository.getExisted(id));
-    }
-
-    @Parameters({
-            @Parameter(name = "date", description = "дата еды в ресторанах (по умолчанию - текущая)")
-    })
-    @Cacheable("dishes")
-    @GetMapping("/by-date")
-    public List<DishTo> getByDate(@RequestParam(required = false) Optional<LocalDate> date) {
-        LocalDate dishDate = date.orElse(LocalDate.now());
-        log.info("get dishes for date {}", date);
-        List<Dish> byDate = repository.getByDate(dishDate);
-        return DishUtil.getTos(byDate);
     }
 }

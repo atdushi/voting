@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.repository;
 
+import com.github.atdushi.voting.model.Restaurant;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,10 +19,8 @@ public interface DishRepository extends BaseRepository<Dish> {
     @Query("DELETE FROM Dish d WHERE d.id = ?1")
     int delete(int id);
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id = ?1 AND d.date = ?2 ORDER BY d.name")
-    List<Dish> getByRestaurantId(int restaurantId, LocalDate date);
+    List<Dish> getByRestaurantAndDateOrderByNameAsc(Restaurant restaurant, LocalDate date);
 
     @Cacheable("dishes")
-    @Query("SELECT d FROM Dish d WHERE d.date = ?1 ORDER BY d.restaurant.name, d.name")
-    List<Dish> getByDate(LocalDate date);
+    List<Dish> getByDateOrderByRestaurantNameAscNameAsc(LocalDate date);
 }

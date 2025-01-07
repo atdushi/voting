@@ -30,21 +30,11 @@ public class DishControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
-    void getByRestaurant() throws Exception {
+    void getByRestaurantAndDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "?restaurantId=" + TOKYO_CITY_ID + "&date=" + DATE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(lasagna1, lasagna2, lasagna3, lasagna4));
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
-    void getByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-date?date=" + DATE))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(shashlik, lasagna1, lasagna2, lasagna3, lasagna4));
     }
 }
