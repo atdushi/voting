@@ -1,6 +1,7 @@
 package com.github.atdushi.voting.web;
 
 import com.github.atdushi.common.error.NotFoundException;
+import com.github.atdushi.common.util.JsonUtil;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 import com.github.atdushi.voting.repository.RestaurantRepository;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Tag(name = "Restaurant", description = "API для работы с ресторанами")
 @Slf4j
@@ -65,14 +68,17 @@ public class RestaurantController {
         return RestaurantUtil.getTos(all, false);
     }
 
+    @Operation(summary = "рестораны, упорядоченные по рейтингу")
     @Parameters({
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     @GetMapping("/order-by-rating-desc")
-    public List<RestaurantTo> getAllByRating(@RequestParam(required = false) Optional<LocalDate> date) {
+    public List<RestaurantWithRating> getAllByRating(@RequestParam(required = false) Optional<LocalDate> date) {
         LocalDate votingDate = date.orElse(LocalDate.now());
         log.info("getAll by rating desc on date {}", votingDate);
-        List<RestaurantWithRating> all = repository.findAllByRatingDesc(votingDate);
-        return RestaurantUtil.getTos(all);
+        List<RestaurantWithRating> raw = repository.findAllByRatingDesc(votingDate);
+        return raw.stream()
+                .map(r -> (RestaurantWithRating) RestaurantUtil.getTo(r))
+                .toList();
     }
 }
