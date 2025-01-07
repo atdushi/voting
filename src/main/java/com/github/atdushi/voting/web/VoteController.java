@@ -55,24 +55,26 @@ public class VoteController {
         return VoteUtil.getTo(voteRepository.getExisted(id));
     }
 
-    @Operation(summary = "история голосов текущего пользователя")
-    @Parameters({
-            @Parameter(name = "date", description = "дата голосования (по умолчанию - все)")
-    })
-    @GetMapping("/history")
-    public List<VoteTo> getVotesHistory(@RequestParam(required = false) Optional<LocalDate> date) {
+    @Operation(summary = "посмотреть свой сегодняшний голос")
+    @GetMapping("/today")
+    public VoteTo getToday() {
         User user = AuthUtil.get().getUser();
-        log.info("get vote for user {} date {}", user.getId(), date);
+        log.info("get today's vote of user {}", user.getId());
 
-        if (date.isPresent()) {
-            Optional<Vote> vote = voteRepository.getByUserAndDate(user, date.get());
-            if (vote.isEmpty()) {
-                throw new NotFoundException("Vote not found");
-            }
-            return List.of(VoteUtil.getTo(vote.get()));
+        Optional<Vote> vote = voteRepository.getByUserAndDate(user, getVotingDate());
+        if (vote.isEmpty()) {
+            throw new NotFoundException("Votes not found");
         }
+        return VoteUtil.getTo(vote.get());
+    }
 
-        List<Vote> votes = voteRepository.getByUser(user);
+    @Operation(summary = "история голосов текущего пользователя")
+    @GetMapping("/history")
+    public List<VoteTo> getVotingHistory() {
+        User user = AuthUtil.get().getUser();
+        log.info("get voting history of user {}", user.getId());
+
+        List<Vote> votes = voteRepository.getByUserOrderByDateDesc(user);
         if (votes.isEmpty()) {
             throw new NotFoundException("Votes not found");
         }
