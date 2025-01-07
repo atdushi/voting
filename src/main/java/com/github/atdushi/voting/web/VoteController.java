@@ -81,11 +81,12 @@ public class VoteController {
         return VoteUtil.getTos(votes);
     }
 
-    @GetMapping("/count-by-restaurant")
+    @Operation(summary = "количество голосов за ресторан")
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
+    @GetMapping("/count-by-restaurant")
     public long countByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
         LocalDate voteDate = date.orElse(LocalDate.now());
         Restaurant existed = restaurantRepository.getExisted(restaurantId);
