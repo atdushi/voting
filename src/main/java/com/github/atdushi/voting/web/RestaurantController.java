@@ -1,7 +1,6 @@
 package com.github.atdushi.voting.web;
 
 import com.github.atdushi.common.error.NotFoundException;
-import com.github.atdushi.common.util.JsonUtil;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 import com.github.atdushi.voting.repository.RestaurantRepository;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Tag(name = "Restaurant", description = "API для работы с ресторанами")
 @Slf4j
@@ -58,7 +55,6 @@ public class RestaurantController {
         }
         return RestaurantUtil.getTo(withDishes.get(), true);
     }
-
 
     @Cacheable("restaurants")
     @GetMapping
