@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.atdushi.common.model.NamedEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,9 +20,11 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Dish> dishes;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Vote> votes;
 
