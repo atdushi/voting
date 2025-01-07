@@ -5,9 +5,9 @@ package com.github.atdushi.voting.util;
  */
 public class View {
     /**
-     * The CreateRead interface is used to group validation constraints for create and read operations.
+     * The Create interface is used to group validation constraints for create operations.
      */
-    public interface CreateRead {}
+    public interface Create {}
 
     /**
      * The Update interface is used to group validation constraints for update operations.

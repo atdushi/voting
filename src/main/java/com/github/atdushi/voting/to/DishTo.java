@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.github.atdushi.common.to.NamedTo;
 import com.github.atdushi.voting.util.View;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -14,13 +15,13 @@ import java.time.LocalDate;
 public class DishTo extends NamedTo {
 
     @NotNull
-    @JsonView(View.CreateRead.class)    // can't update
+    @JsonView(View.Create.class)    // can't update
     Integer restaurantId;
 
-    @NotNull
+    @Positive(groups = {View.Create.class, View.Update.class})
     Integer price;
 
-    @NotNull
+    @NotNull(groups = {View.Create.class, View.Update.class})
     LocalDate date;
 
     public DishTo(Integer id, String name, Integer price, Integer restaurantId, LocalDate date) {

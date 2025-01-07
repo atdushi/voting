@@ -3,7 +3,6 @@ package com.github.atdushi.voting.web;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.atdushi.voting.util.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class AdminDishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "dishes", allEntries = true)
-    public ResponseEntity<Dish> register(@Validated(View.CreateRead.class) @JsonView(View.CreateRead.class) @RequestBody DishTo dishTo) {
+    public ResponseEntity<Dish> register(@Validated(View.Create.class) @JsonView(View.Create.class) @RequestBody DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
