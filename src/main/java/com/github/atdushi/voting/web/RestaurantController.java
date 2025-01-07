@@ -1,10 +1,12 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.common.error.NotFoundException;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 import com.github.atdushi.voting.repository.RestaurantRepository;
 import com.github.atdushi.voting.to.RestaurantTo;
 import com.github.atdushi.voting.util.RestaurantUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,10 +35,27 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id) {
-        log.info("get with dishes by id {}", id);
+        log.info("get by id {}", id);
         Restaurant restaurant = repository.getExisted(id);
         return RestaurantUtil.getTo(restaurant);
     }
+
+    @Operation(summary = "ресторан с меню на дату")
+    @Parameters({
+            @Parameter(name = "restaurantId", description = "id ресторана"),
+            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
+    })
+    @GetMapping("/with-dishes")
+    public RestaurantTo get(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
+        LocalDate dishDate = date.orElse(LocalDate.now());
+        log.info("get with dishes by id {}", restaurantId);
+        Optional<Restaurant> withDishes = repository.findWithDishes(restaurantId, dishDate);
+        if (withDishes.isEmpty()) {
+            throw new NotFoundException("Restaurant with id=" + restaurantId + " not found");
+        }
+        return RestaurantUtil.getTo(withDishes.get(), true);
+    }
+
 
     @Cacheable("restaurants")
     @GetMapping

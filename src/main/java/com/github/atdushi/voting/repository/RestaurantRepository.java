@@ -32,7 +32,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             SELECT r
             FROM Restaurant r
             LEFT JOIN FETCH r.dishes d
-            LEFT JOIN FETCH r.votes v
-            WHERE r.id = :id and v.date = :date""")
+            WHERE r.id = :id and d.date = :date""")
     Optional<Restaurant> findWithDishes(int id, LocalDate date);
 }

@@ -24,18 +24,11 @@ public class Restaurant extends NamedEntity {
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Dish> dishes;
 
-    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
-    private Set<Vote> votes;
-
     public Restaurant(Integer id, String name) {
         super(id, name);
     }
 
     public List<Dish> getDishes() {
         return dishes == null ? Collections.emptyList() : List.copyOf(dishes);
-    }
-
-    public List<Vote> getVotes() {
-        return votes == null ? Collections.emptyList() : List.copyOf(votes);
     }
 }
