@@ -45,7 +45,7 @@ public class DishController {
     @GetMapping("/{id}")
     public DishTo get(@PathVariable int id) {
         log.info("get dish {}", id);
-        return DishUtil.getTo(repository.findById(id).orElseThrow());
+        return DishUtil.getTo(repository.getExisted(id));
     }
 
     @Parameters({
