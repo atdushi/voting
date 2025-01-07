@@ -46,6 +46,5 @@ public class DishControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(shashlik, lasagna1, lasagna2, lasagna3, lasagna4));
-        ;
     }
 }
