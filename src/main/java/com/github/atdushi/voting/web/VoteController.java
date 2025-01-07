@@ -58,7 +58,7 @@ public class VoteController {
 
     @Operation(summary = "история голосов текущего пользователя")
     @Parameters({
-            @Parameter(name = "date", description = "дата голосования (по-умолчанию - все)")
+            @Parameter(name = "date", description = "дата голосования (по умолчанию - все)")
     })
     @GetMapping("/history")
     public List<VoteTo> getVotesHistory(@RequestParam(required = false) Optional<LocalDate> date) {
@@ -83,7 +83,7 @@ public class VoteController {
     @GetMapping("/count-by-restaurant")
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),
-            @Parameter(name = "date", description = "дата голосования (по-умолчанию - текущая)")
+            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     public long countByRestaurant(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
         LocalDate voteDate = date.orElse(LocalDate.now());
