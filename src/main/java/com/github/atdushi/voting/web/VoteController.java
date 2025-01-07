@@ -68,7 +68,7 @@ public class VoteController {
         return VoteUtil.getTo(vote.get());
     }
 
-    @Operation(summary = "история голосов текущего пользователя")
+    @Operation(summary = "посмотреть историю своих голосов")
     @GetMapping("/history")
     public List<VoteTo> getVotingHistory() {
         User user = AuthUtil.get().getUser();
