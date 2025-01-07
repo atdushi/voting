@@ -40,10 +40,10 @@ public class RestaurantController {
         return RestaurantUtil.getTo(restaurant);
     }
 
-    @Operation(summary = "ресторан с меню на дату")
+    @Operation(summary = "ресторан с едой")
     @Parameters({
             @Parameter(name = "restaurantId", description = "id ресторана"),
-            @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
+            @Parameter(name = "date", description = "дата еды (по умолчанию - текущая)")
     })
     @GetMapping("/with-dishes")
     public RestaurantTo get(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
