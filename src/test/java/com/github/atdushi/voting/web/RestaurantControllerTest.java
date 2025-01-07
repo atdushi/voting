@@ -47,4 +47,14 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(tokyoCity, bahroma));
     }
+
+    @Test
+    @WithUserDetails(value = UserTestData.USER_MAIL)
+    void getWithDishes() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-dishes?restaurantId=" + TOKYO_CITY_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(tokyoCity));
+    }
 }
