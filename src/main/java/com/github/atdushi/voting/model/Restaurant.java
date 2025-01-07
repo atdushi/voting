@@ -14,17 +14,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @Entity
 @Table(name = "restaurant")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Dish> dishes;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     private Set<Vote> votes;
 
