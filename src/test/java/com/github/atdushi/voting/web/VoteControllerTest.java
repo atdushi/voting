@@ -6,7 +6,6 @@ import com.github.atdushi.user.UserTestData;
 import com.github.atdushi.voting.RestaurantTestData;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.VoteRepository;
-import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -51,7 +50,7 @@ public class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
-    void getVotesHistory() throws Exception {
+    void getVotingHistory() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.get(
                 REST_URL_SLASH + "history"))
                 .andExpect(status().isOk())
@@ -64,15 +63,15 @@ public class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.USER_MAIL)
-    void getVotesForToday() throws Exception {
+    void getToday() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.get(
                 REST_URL_SLASH + "today"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        VoteTo vote = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), VoteTo.class);
-        assert vote != null;
+        Integer restaurantId = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), Integer.class);
+        assert restaurantId.equals(TokyoVote1.getRestaurant().getId());
     }
 
     @Test

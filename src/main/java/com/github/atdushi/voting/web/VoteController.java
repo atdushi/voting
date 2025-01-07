@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,17 +56,16 @@ public class VoteController {
         return VoteUtil.getTo(voteRepository.getExisted(id));
     }
 
-    @Operation(summary = "посмотреть свой сегодняшний голос")
+    @Operation(summary = "посмотреть id ресторана, за который сегодня проголосовал")
     @GetMapping("/today")
-    public VoteTo getToday() {
+    @Transactional
+    public ResponseEntity<Integer> getToday() {
         User user = AuthUtil.get().getUser();
         log.info("get today's vote of user {}", user.getId());
 
         Optional<Vote> vote = voteRepository.getByUserAndDate(user, getVotingDate());
-        if (vote.isEmpty()) {
-            throw new NotFoundException("Votes not found");
-        }
-        return VoteUtil.getTo(vote.get());
+        return vote.map(value -> ResponseEntity.ok(value.getRestaurant().id()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "посмотреть историю своих голосов")
