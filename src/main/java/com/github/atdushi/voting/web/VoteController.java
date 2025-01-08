@@ -52,6 +52,7 @@ public class VoteController {
             @Parameter(name = "id", description = "id голоса")
     })
     @GetMapping("/{id}")
+    @Transactional
     public VoteTo get(@PathVariable int id) {
         return VoteUtil.getTo(voteRepository.getExisted(id));
     }
@@ -99,7 +100,8 @@ public class VoteController {
     })
     @PostMapping(value = "/{restaurantId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vote> vote(@PathVariable int restaurantId) {
+    @Transactional
+    public ResponseEntity<VoteTo> vote(@PathVariable int restaurantId) {
         User user = AuthUtil.get().getUser();
         Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         log.info("vote restaurant {} user {}", restaurant, user);
@@ -109,13 +111,14 @@ public class VoteController {
 
         if (existed.isEmpty()) {
             Vote vote = VoteUtil.createNew(user.id(), restaurantId);
-            voteRepository.save(vote);
+            vote = voteRepository.save(vote);
+            vote = voteRepository.getExisted(vote.id());
 
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path(REST_URL + "/{id}")
                     .buildAndExpand(vote.getId()).toUri();
 
-            return ResponseEntity.created(uriOfNewResource).body(vote);
+            return ResponseEntity.created(uriOfNewResource).body(VoteUtil.getTo(vote));
         } else {
             // re-vote
             if (LocalTime.now().isBefore(TIME_LIMIT)) {
@@ -123,7 +126,7 @@ public class VoteController {
                     existed.get().setRestaurant(restaurant);
                     voteRepository.save(existed.get());
                 }
-                return ResponseEntity.ok(existed.get());
+                return ResponseEntity.ok(VoteUtil.getTo(existed.get()));
             } else {
                 throw new IllegalRequestDataException("Can't re-vote after " + TIME_LIMIT + " a.m.");
             }

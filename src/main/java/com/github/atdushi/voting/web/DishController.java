@@ -1,5 +1,6 @@
 package com.github.atdushi.voting.web;
 
+import com.github.atdushi.common.error.NotFoundException;
 import com.github.atdushi.voting.model.Dish;
 import com.github.atdushi.voting.repository.DishRepository;
 import com.github.atdushi.voting.to.DishTo;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,18 +37,28 @@ public class DishController {
             @Parameter(name = "date", description = "дата еды в ресторане (по умолчанию - текущая)")
     })
     @GetMapping
+    @Transactional
     public List<DishTo> getByRestaurantAndDate(@RequestParam(required = false) Optional<Integer> restaurantId,
                                                @RequestParam(required = false) Optional<LocalDate> date) {
         log.info("get all by restaurant {} and date {}", restaurantId, date);
         LocalDate dishDate = date.orElse(LocalDate.now());
         if (restaurantId.isEmpty()) {
-            return DishUtil.getTos(repository.getByDateOrderByRestaurantNameAscNameAsc(dishDate));
+            List<Dish> all = repository.getByDateOrderByRestaurantNameAscNameAsc(dishDate);
+            return getDishTos(all);
         }
         List<Dish> all = repository.getByRestaurantAndDateOrderByNameAsc(RestaurantUtil.createNewFromId(restaurantId.get()), dishDate);
+        return getDishTos(all);
+    }
+
+    private static List<DishTo> getDishTos(List<Dish> all) {
+        if (all.isEmpty()) {
+            throw new NotFoundException("Dishes not found");
+        }
         return DishUtil.getTos(all);
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public DishTo get(@PathVariable int id) {
         log.info("get dish {}", id);
         return DishUtil.getTo(repository.getExisted(id));
