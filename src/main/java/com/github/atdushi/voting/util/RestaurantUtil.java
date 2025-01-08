@@ -1,16 +1,15 @@
 package com.github.atdushi.voting.util;
 
 import com.github.atdushi.voting.model.Restaurant;
-import com.github.atdushi.voting.to.RestaurantTo;
 import com.github.atdushi.voting.model.RestaurantWithRating;
+import com.github.atdushi.voting.to.RestaurantTo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RestaurantUtil {
 
-    public static RestaurantTo getTo(Restaurant restaurant){
+    public static RestaurantTo getTo(Restaurant restaurant) {
         return getTo(restaurant, false);
     }
 
@@ -30,16 +29,16 @@ public class RestaurantUtil {
                 restaurantWithRating.getRating());
     }
 
-    public static List<RestaurantTo> getTos(Collection<RestaurantWithRating> restaurants) {
+    public static <T extends RestaurantWithRating> List<RestaurantWithRating> getTos(Collection<T> restaurants) {
         return restaurants.stream()
-                .map(RestaurantUtil::getTo)
-                .collect(Collectors.toList());
+                .map(r -> (RestaurantWithRating) RestaurantUtil.getTo(r))
+                .toList();
     }
 
     public static List<RestaurantTo> getTos(List<Restaurant> restaurants, boolean includeDishes) {
         return restaurants.stream()
                 .map(r -> getTo(r, includeDishes))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static Restaurant createNewFromTo(RestaurantTo restaurantTo) {

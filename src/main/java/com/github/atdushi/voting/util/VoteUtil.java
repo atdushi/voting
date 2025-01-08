@@ -8,7 +8,6 @@ import com.github.atdushi.voting.to.VoteTo;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class VoteUtil {
 
@@ -31,6 +30,6 @@ public class VoteUtil {
     public static List<VoteTo> getTos(Collection<Vote> votes) {
         return votes.stream()
                 .map(VoteUtil::getTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

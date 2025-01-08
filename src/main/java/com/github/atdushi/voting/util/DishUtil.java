@@ -6,7 +6,6 @@ import com.github.atdushi.voting.to.DishTo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DishUtil {
 
@@ -22,7 +21,7 @@ public class DishUtil {
     public static List<DishTo> getTos(Collection<Dish> dishes) {
         return dishes.stream()
                 .map(DishUtil::getTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static Dish createNewFromTo(DishTo dishTo) {
