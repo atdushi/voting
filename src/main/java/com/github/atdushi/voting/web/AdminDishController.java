@@ -7,6 +7,8 @@ import com.github.atdushi.voting.to.DishTo;
 import com.github.atdushi.voting.util.DishUtil;
 import com.github.atdushi.voting.util.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,6 +37,9 @@ public class AdminDishController {
 
     @Autowired
     private final DishRepository repository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -57,10 +63,15 @@ public class AdminDishController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "dishes", allEntries = true)
+    @Transactional
     public ResponseEntity<Dish> register(@Valid @RequestBody DishTo dishTo) {
         log.info("register {}", dishTo);
         checkNew(dishTo);
+
         Dish created = repository.save(DishUtil.createNewFromTo(dishTo));
+        entityManager.refresh(created);             // refresh to bypass cache
+        created.getRestaurant().setDishes(null);    // remove proxy
+
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL+ "/{id}")
                 .buildAndExpand(created.getId()).toUri();
