@@ -2,7 +2,7 @@ package com.github.atdushi.voting.to;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.atdushi.common.to.NamedTo;
-import com.github.atdushi.voting.util.View;
+import com.github.atdushi.voting.View;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;

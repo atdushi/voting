@@ -1,4 +1,4 @@
-package com.github.atdushi.voting.util;
+package com.github.atdushi.voting;
 
 /**
  * The View class contains nested interfaces used for grouping validation constraints.

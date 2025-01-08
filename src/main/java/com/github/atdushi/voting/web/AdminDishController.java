@@ -5,7 +5,7 @@ import com.github.atdushi.voting.model.Dish;
 import com.github.atdushi.voting.repository.DishRepository;
 import com.github.atdushi.voting.to.DishTo;
 import com.github.atdushi.voting.util.DishUtil;
-import com.github.atdushi.voting.util.View;
+import com.github.atdushi.voting.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
