@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -46,12 +47,13 @@ public class RestaurantController {
             @Parameter(name = "date", description = "дата еды (по умолчанию - текущая)")
     })
     @GetMapping("/with-dishes")
+    @Transactional
     public RestaurantTo get(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
         LocalDate dishDate = date.orElse(LocalDate.now());
         log.info("get with dishes by id {}", restaurantId);
-        Optional<Restaurant> withDishes = repository.findWithDishes(restaurantId, dishDate);
+        Optional<Restaurant> withDishes = repository.findByIdAndDishesDate(restaurantId, dishDate);
         if (withDishes.isEmpty()) {
-            throw new NotFoundException("Restaurant with id=" + restaurantId + " not found");
+            throw new NotFoundException("Restaurant with id=" + restaurantId + " and dishes on " + dishDate + " not found");
         }
         return RestaurantUtil.getTo(withDishes.get(), true);
     }

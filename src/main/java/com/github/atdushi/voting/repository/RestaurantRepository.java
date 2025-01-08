@@ -28,10 +28,5 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc(LocalDate date);
 
-    @Query("""
-            SELECT r
-            FROM Restaurant r
-            LEFT JOIN FETCH r.dishes d
-            WHERE r.id = :id and d.date = :date""")
-    Optional<Restaurant> findWithDishes(int id, LocalDate date);
+    Optional<Restaurant> findByIdAndDishesDate(int id, LocalDate date);
 }
