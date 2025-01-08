@@ -60,3 +60,6 @@ springdoc:
   swagger-ui:
     path: /
     tagsSorter: alpha
+
+voting:
+  skipTimeCheck: true

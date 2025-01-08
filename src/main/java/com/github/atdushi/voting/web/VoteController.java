@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,9 @@ import static com.github.atdushi.voting.util.VoteUtil.TIME_LIMIT;
 public class VoteController {
 
     static final String REST_URL = "/api/votes";
+
+    @Value("${voting.skipTimeCheck}")
+    private boolean skipTimeCheck;  // for testing purposes
 
     @Autowired
     private final VoteRepository voteRepository;
@@ -71,6 +75,7 @@ public class VoteController {
 
     @Operation(summary = "посмотреть историю своих голосов")
     @GetMapping("/history")
+    @Transactional
     public List<VoteTo> getVotingHistory() {
         User user = AuthUtil.get().getUser();
         log.info("get voting history of user {}", user.getId());
@@ -121,7 +126,7 @@ public class VoteController {
             return ResponseEntity.created(uriOfNewResource).body(VoteUtil.getTo(vote));
         } else {
             // re-vote
-            if (LocalTime.now().isBefore(TIME_LIMIT)) {
+            if (LocalTime.now().isBefore(TIME_LIMIT) || skipTimeCheck) {
                 if (existed.get().getRestaurant().id() != restaurantId) {
                     existed.get().setRestaurant(restaurant);
                     voteRepository.save(existed.get());
