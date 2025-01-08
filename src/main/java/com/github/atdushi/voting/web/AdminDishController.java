@@ -39,7 +39,7 @@ public class AdminDishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "dishes", allEntries = true)
     public void delete(@PathVariable int id) {
-        repository.deleteById(id);
+        repository.deleteExisted(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
