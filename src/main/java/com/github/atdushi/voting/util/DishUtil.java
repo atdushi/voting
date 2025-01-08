@@ -15,7 +15,7 @@ public class DishUtil {
                 dish.getId(),
                 dish.getName(),
                 dish.getPrice(),
-                dish.getRestaurant() != null ? dish.getRestaurant().getId() : null,
+                dish.getRestaurant() != null ? dish.getRestaurant().id() : 0,
                 dish.getDate());
     }
 
@@ -33,7 +33,7 @@ public class DishUtil {
                 new Restaurant(dishTo.getRestaurantId(), null),
                 dishTo.getDate());
 
-        if (dishTo.getRestaurantId() != null) {
+        if (dishTo.getRestaurantId() > 0) {
             dish.setRestaurant(new Restaurant(dishTo.getRestaurantId(), null));
         }
         return dish;

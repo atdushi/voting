@@ -14,17 +14,16 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class DishTo extends NamedTo {
 
-    @NotNull
     @JsonView(View.Create.class)    // can't update
-    Integer restaurantId;
+    int restaurantId;
 
-    @Positive(groups = {View.Create.class, View.Update.class})
-    Integer price;
+    @Positive
+    int price;
 
-    @NotNull(groups = {View.Create.class, View.Update.class})
+    @NotNull
     LocalDate date;
 
-    public DishTo(Integer id, String name, Integer price, Integer restaurantId, LocalDate date) {
+    public DishTo(Integer id, String name, int price, int restaurantId, LocalDate date) {
         super(id, name);
         this.price = price;
         this.restaurantId = restaurantId;
