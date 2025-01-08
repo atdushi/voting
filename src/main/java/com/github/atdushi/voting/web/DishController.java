@@ -1,7 +1,6 @@
 package com.github.atdushi.voting.web;
 
 import com.github.atdushi.voting.model.Dish;
-import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.repository.DishRepository;
 import com.github.atdushi.voting.to.DishTo;
 import com.github.atdushi.voting.util.DishUtil;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +36,7 @@ public class DishController {
     })
     @GetMapping
     public List<DishTo> getByRestaurantAndDate(@RequestParam(required = false) Optional<Integer> restaurantId,
-                                        @RequestParam(required = false) Optional<LocalDate> date) {
+                                               @RequestParam(required = false) Optional<LocalDate> date) {
         log.info("get all by restaurant {} and date {}", restaurantId, date);
         LocalDate dishDate = date.orElse(LocalDate.now());
         if (restaurantId.isEmpty()) {
