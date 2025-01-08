@@ -24,7 +24,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             from restaurant r
             left join (select v.*, 1 cnt from vote v where v.vote_date = :date) v1 on v1.restaurant_id = r.id
             group by r.id, r.name
-            order by count(*) desc
+            order by count(*) desc, r.name asc
             """, nativeQuery = true)
     List<RestaurantWithRating> findAllByRatingDesc(LocalDate date);
 
