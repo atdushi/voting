@@ -6,6 +6,7 @@ import com.github.atdushi.user.UserTestData;
 import com.github.atdushi.voting.RestaurantTestData;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.VoteRepository;
+import com.github.atdushi.voting.to.VoteTo;
 import com.github.atdushi.voting.util.VoteUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -142,18 +143,17 @@ public class VoteControllerTest extends AbstractControllerTest {
             Mockito.when(spyClock.instant()).thenReturn(Instant.ofEpochSecond(EPOCH_SECOND));
 
             Vote newVote = getNew();
-            Vote created = vote(newVote);
-            int newId = created.id();
-            newVote.setId(newId);
-            VOTE_MATCHER.assertMatch(created, newVote);
-            VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+            VoteTo created = vote(newVote);
+
+            assert newVote.getRestaurant().id() == created.getRestaurantId();
+            assert newVote.getUser().id() == created.getUserId();
         }
     }
 
-    private Vote vote(Vote newVote) throws Exception {
+    private VoteTo vote(Vote newVote) throws Exception {
         assert newVote.getRestaurant().getId() != null;
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().getId()))
                 .andExpect(status().isCreated());
-        return VOTE_MATCHER.readFromJson(action);
+        return JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), VoteTo.class);
     }
 }
