@@ -62,4 +62,4 @@ springdoc:
     tagsSorter: alpha
 
 voting:
-  skipTimeCheck: true
+  skipTimeCheck: false
