@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestaurantUtil {
-    private static final int DEFAULT_RATING = 0;
 
     public static RestaurantTo getTo(Restaurant restaurant){
         return getTo(restaurant, false);
@@ -28,7 +27,7 @@ public class RestaurantUtil {
                 restaurantWithRating.getId(),
                 restaurantWithRating.getName(),
                 null, // does not include dishes
-                restaurantWithRating.getRating() == null ? DEFAULT_RATING : restaurantWithRating.getRating());
+                restaurantWithRating.getRating());
     }
 
     public static List<RestaurantTo> getTos(Collection<RestaurantWithRating> restaurants) {
