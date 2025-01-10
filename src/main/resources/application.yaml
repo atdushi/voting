@@ -4,7 +4,7 @@ spring:
     show-sql: true
     open-in-view: false
     # https://stackoverflow.com/a/67678945/548473
-#    defer-datasource-initialization: true
+    #    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none # init only by scripts
     properties:
@@ -31,12 +31,14 @@ spring:
   h2:
     console.enabled: true
 
-# Jackson Serialization Issue Resolver
-  jackson.visibility:
-    field: any
-    getter: none
-    setter: none
-    is-getter: none
+  # Jackson Serialization Issue Resolver
+  jackson:
+    mapper.default-view-inclusion: true   # https://stackoverflow.com/a/37942375/548473
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
 
   # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
   cache:

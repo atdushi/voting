@@ -71,8 +71,8 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-        Integer restaurantId = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), Integer.class);
-        assert restaurantId.equals(TokyoVote1.getRestaurant().getId());
+        VoteTo voteTo = JsonUtil.readValue(action.andReturn().getResponse().getContentAsString(), VoteTo.class);
+        assert voteTo.getRestaurantId() == TokyoVote1.getRestaurant().id();
     }
 
     @Test

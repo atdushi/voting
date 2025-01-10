@@ -13,4 +13,9 @@ public class View {
      * The Update interface is used to group validation constraints for update operations.
      */
     public interface Update {}
+
+    /**
+     * The Web interface is used to group validation constraints for view operations.
+     */
+    public interface Web {}
 }

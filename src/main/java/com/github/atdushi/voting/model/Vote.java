@@ -1,5 +1,7 @@
 package com.github.atdushi.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.github.atdushi.voting.View;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -21,6 +23,7 @@ public class Vote extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonView(View.Create.class)
     private User user;
 
     @Column(name = "vote_date", nullable = false, columnDefinition = "date default current_date")

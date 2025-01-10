@@ -1,9 +1,11 @@
 package com.github.atdushi.voting.web;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.atdushi.app.AuthUtil;
 import com.github.atdushi.common.error.IllegalRequestDataException;
 import com.github.atdushi.common.error.NotFoundException;
 import com.github.atdushi.user.model.User;
+import com.github.atdushi.voting.View;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.repository.RestaurantRepository;
@@ -60,21 +62,23 @@ public class VoteController {
         return VoteUtil.getTo(voteRepository.getExisted(id));
     }
 
-    @Operation(summary = "посмотреть id ресторана, за который сегодня проголосовал")
+    @Operation(summary = "посмотреть свой голос за сегодня")
     @GetMapping("/today")
     @Transactional
-    public ResponseEntity<Integer> getToday() {
+    @JsonView(View.Web.class)
+    public ResponseEntity<VoteTo> getToday() {
         User user = AuthUtil.get().getUser();
         log.info("get today's vote of user {}", user.getId());
 
         Optional<Vote> vote = voteRepository.getByUserAndDate(user, getVotingDate());
-        return vote.map(value -> ResponseEntity.ok(value.getRestaurant().id()))
+        return vote.map(value -> ResponseEntity.ok(VoteUtil.getTo(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "посмотреть историю своих голосов")
     @GetMapping("/history")
     @Transactional
+    @JsonView(View.Web.class)
     public List<VoteTo> getVotingHistory() {
         User user = AuthUtil.get().getUser();
         log.info("get voting history of user {}", user.getId());

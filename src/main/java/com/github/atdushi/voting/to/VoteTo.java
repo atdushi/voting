@@ -1,9 +1,11 @@
 package com.github.atdushi.voting.to;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.github.atdushi.common.to.BaseTo;
+import com.github.atdushi.voting.View;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import com.github.atdushi.common.to.BaseTo;
 
 import java.time.LocalDate;
 
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 public class VoteTo extends BaseTo {
 
     @Positive
+    @JsonView(View.Create.class)
     int userId;
 
     @Positive
