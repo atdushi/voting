@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class DishController {
     @GetMapping
     @Transactional
     public List<DishTo> getByRestaurantAndDate(@RequestParam Optional<Integer> restaurantId,
-                                               @RequestParam Optional<LocalDate> date) {
+                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
         log.info("get all by restaurant {} and date {}", restaurantId, date);
         LocalDate dishDate = date.orElse(LocalDate.now());
         if (restaurantId.isEmpty()) {

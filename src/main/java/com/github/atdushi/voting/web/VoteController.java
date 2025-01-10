@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +97,9 @@ public class VoteController {
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     @GetMapping("/count-by-restaurant")
-    public long countByRestaurant(@RequestParam int restaurantId, @RequestParam Optional<LocalDate> date) {
+    public long countByRestaurant(
+            @RequestParam int restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
         LocalDate voteDate = date.orElse(LocalDate.now());
         Restaurant existed = restaurantRepository.getExisted(restaurantId);
         return voteRepository.countByRestaurantAndDate(existed, voteDate);

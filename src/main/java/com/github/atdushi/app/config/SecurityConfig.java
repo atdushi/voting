@@ -54,6 +54,8 @@ public class SecurityConfig {
                         authz.requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
                                 .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+                                .requestMatchers("/api/restaurants/**").permitAll()
+                                .requestMatchers("/api/dishes/**").permitAll()
                                 .requestMatchers("/api/**").authenticated())
                 .httpBasic(withDefaults())
                 .sessionManagement(smc -> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

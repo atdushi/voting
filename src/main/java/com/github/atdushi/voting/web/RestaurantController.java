@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,9 @@ public class RestaurantController {
     })
     @GetMapping("/with-dishes")
     @Transactional
-    public RestaurantTo get(@RequestParam int restaurantId, @RequestParam Optional<LocalDate> date) {
+    public RestaurantTo get(
+            @RequestParam int restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
         LocalDate dishDate = date.orElse(LocalDate.now());
         log.info("get with dishes by id {}", restaurantId);
         Optional<Restaurant> withDishes = repository.findByIdAndDishesDate(restaurantId, dishDate);
@@ -71,7 +74,7 @@ public class RestaurantController {
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     @GetMapping("/order-by-rating-desc")
-    public List<RestaurantWithRating> getAllByRating(@RequestParam Optional<LocalDate> date) {
+    public List<RestaurantWithRating> getAllByRating(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
         LocalDate votingDate = date.orElse(LocalDate.now());
         log.info("getAll by rating desc on date {}", votingDate);
         List<RestaurantWithRating> raw = repository.findAllByRatingDesc(votingDate);
