@@ -104,7 +104,7 @@ public class VoteControllerTest extends AbstractControllerTest {
             Vote newVote = getNew();
             vote(newVote);
             perform(MockMvcRequestBuilders.post(REST_URL_SLASH + newVote.getRestaurant().getId()))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isNoContent());
         }
     }
 
