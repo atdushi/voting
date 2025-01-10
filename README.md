@@ -58,20 +58,20 @@ Guest: guest@gmail.com / guest
 <details>
   <summary>Admin Users</summary>
 
-  ![](/images/Untitled2.png)
+  ![](/images/users.png)
 
 </details>
 
 <details>
   <summary>Admin Restaurants and Dishes</summary>
 
-  ![](/images/Untitled3.png)
+  ![](/images/restaurants.png)
 
 </details>
 
 <details>
   <summary>Voting</summary>
 
-  ![](/images/Untitled4.png)
+  ![](/images/voting.png)
 
 </details>
