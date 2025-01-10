@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,7 +103,6 @@ public class VoteController {
             @Parameter(name = "restaurantId", description = "id ресторана")
     })
     @PostMapping(value = "/{restaurantId}")
-    @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<VoteTo> vote(@PathVariable int restaurantId) {
         User user = AuthUtil.get().getUser();
@@ -131,7 +129,7 @@ public class VoteController {
                     existed.get().setRestaurant(restaurant);
                     voteRepository.save(existed.get());
                 }
-                return ResponseEntity.ok(VoteUtil.getTo(existed.get()));
+                return ResponseEntity.noContent().build();
             } else {
                 throw new IllegalRequestDataException("Can't re-vote after " + TIME_LIMIT + " a.m.");
             }
