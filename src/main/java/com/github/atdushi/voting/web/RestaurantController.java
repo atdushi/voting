@@ -48,7 +48,7 @@ public class RestaurantController {
     })
     @GetMapping("/with-dishes")
     @Transactional
-    public RestaurantTo get(@RequestParam int restaurantId, @RequestParam(required = false) Optional<LocalDate> date) {
+    public RestaurantTo get(@RequestParam int restaurantId, @RequestParam Optional<LocalDate> date) {
         LocalDate dishDate = date.orElse(LocalDate.now());
         log.info("get with dishes by id {}", restaurantId);
         Optional<Restaurant> withDishes = repository.findByIdAndDishesDate(restaurantId, dishDate);
@@ -71,7 +71,7 @@ public class RestaurantController {
             @Parameter(name = "date", description = "дата голосования (по умолчанию - текущая)")
     })
     @GetMapping("/order-by-rating-desc")
-    public List<RestaurantWithRating> getAllByRating(@RequestParam(required = false) Optional<LocalDate> date) {
+    public List<RestaurantWithRating> getAllByRating(@RequestParam Optional<LocalDate> date) {
         LocalDate votingDate = date.orElse(LocalDate.now());
         log.info("getAll by rating desc on date {}", votingDate);
         List<RestaurantWithRating> raw = repository.findAllByRatingDesc(votingDate);

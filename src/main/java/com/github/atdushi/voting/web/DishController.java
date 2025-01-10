@@ -38,8 +38,8 @@ public class DishController {
     })
     @GetMapping
     @Transactional
-    public List<DishTo> getByRestaurantAndDate(@RequestParam(required = false) Optional<Integer> restaurantId,
-                                               @RequestParam(required = false) Optional<LocalDate> date) {
+    public List<DishTo> getByRestaurantAndDate(@RequestParam Optional<Integer> restaurantId,
+                                               @RequestParam Optional<LocalDate> date) {
         log.info("get all by restaurant {} and date {}", restaurantId, date);
         LocalDate dishDate = date.orElse(LocalDate.now());
         if (restaurantId.isEmpty()) {
