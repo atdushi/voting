@@ -77,7 +77,7 @@ public class RestaurantController {
     public List<RestaurantWithRating> getAllByRating(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
         LocalDate votingDate = date.orElse(LocalDate.now());
         log.info("getAll by rating desc on date {}", votingDate);
-        List<RestaurantWithRating> raw = repository.findAllByRatingDesc(votingDate);
+        List<RestaurantWithRating> raw = repository.findAllByDateOrderByRatingDesc(votingDate);
         return RestaurantUtil.getTos(raw);
     }
 }

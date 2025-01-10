@@ -20,7 +20,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             group by r.id, r.name
             order by coalesce(cast(sum(v1.cnt) as int), 0) desc, r.name asc
             """, nativeQuery = true)
-    List<RestaurantWithRating> findAllByRatingDesc(LocalDate date);
+    List<RestaurantWithRating> findAllByDateOrderByRatingDesc(LocalDate date);
 
     Optional<Restaurant> findByIdAndDishesDate(int id, LocalDate date);
 }
