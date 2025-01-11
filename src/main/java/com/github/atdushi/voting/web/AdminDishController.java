@@ -92,4 +92,14 @@ public class AdminDishController {
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void enable(@PathVariable int id, @RequestParam int price) {
+        log.info("update price {} for dish {}", price, id);
+        Dish dish = repository.getExisted(id);
+        dish.setPrice(price);
+        repository.save(dish);
+    }
 }
