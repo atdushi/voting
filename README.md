@@ -54,13 +54,13 @@ Guest: guest@gmail.com / guest
 <details>
   <summary>Swagger screenshots</summary>
 
-  ![](/images/screenshot1.png)
+  ![](/images/screenshot1.png?)
   
-  ![](/images/screenshot2.png)
+  ![](/images/screenshot2.png?)
   
-  ![](/images/screenshot3.png)
+  ![](/images/screenshot3.png?)
 
-  ![](/images/screenshot4.png)
+  ![](/images/screenshot4.png?)
 
 </details>
 
