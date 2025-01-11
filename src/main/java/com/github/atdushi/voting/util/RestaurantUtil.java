@@ -3,10 +3,12 @@ package com.github.atdushi.voting.util;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.RestaurantWithRating;
 import com.github.atdushi.voting.to.RestaurantTo;
+import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
 import java.util.List;
 
+@UtilityClass
 public class RestaurantUtil {
 
     public static RestaurantTo getTo(Restaurant restaurant) {

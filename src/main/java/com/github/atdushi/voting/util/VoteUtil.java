@@ -4,11 +4,13 @@ import com.github.atdushi.user.model.User;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.model.Vote;
 import com.github.atdushi.voting.to.VoteTo;
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
+@UtilityClass
 public class VoteUtil {
 
     public static final LocalTime TIME_LIMIT = LocalTime.of(11, 0);

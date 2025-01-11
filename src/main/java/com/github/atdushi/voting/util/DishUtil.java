@@ -3,10 +3,12 @@ package com.github.atdushi.voting.util;
 import com.github.atdushi.voting.model.Dish;
 import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.to.DishTo;
+import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
 import java.util.List;
 
+@UtilityClass
 public class DishUtil {
 
     public static DishTo getTo(Dish dish) {
