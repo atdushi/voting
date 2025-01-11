@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Objects;
 
 import static com.github.atdushi.common.validation.ValidationUtil.assureIdConsistent;
 import static com.github.atdushi.common.validation.ValidationUtil.checkNew;
@@ -34,6 +37,9 @@ public class AdminRestaurantController {
 
     @Autowired
     private final RestaurantRepository repository;
+
+    @Autowired
+    private final CacheManager cacheManager;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -72,11 +78,15 @@ public class AdminRestaurantController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {"restaurants", "restaurantWithDishes"}, allEntries = true)
+    @CacheEvict(value = {"restaurants"}, allEntries = true)
     public void enable(@PathVariable int id, @RequestParam String name) {
         log.info("update restaurant {} with name {}", id, name);
+
         Restaurant restaurant = repository.getExisted(id);
         restaurant.setName(name);
         repository.save(restaurant);
+
+        Cache restaurantWithDishes = cacheManager.getCache("restaurantWithDishes");
+        Objects.requireNonNull(restaurantWithDishes).evict(id);
     }
 }
