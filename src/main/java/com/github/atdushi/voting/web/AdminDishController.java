@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.github.atdushi.common.validation.ValidationUtil.assureIdConsistent;
@@ -95,11 +97,11 @@ public class AdminDishController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void enable(@PathVariable int id, @RequestParam int price) {
-        log.info("update price {} for dish {}", price, id);
+    @CacheEvict(value = {"dishes", "restaurantWithDishes"}, allEntries = true)
+    public void enable(@PathVariable int id,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("update date {} for dish {}", date, id);
         Dish dish = repository.getExisted(id);
-        dish.setPrice(price);
+        dish.setDate(date);
         repository.save(dish);
     }
 }

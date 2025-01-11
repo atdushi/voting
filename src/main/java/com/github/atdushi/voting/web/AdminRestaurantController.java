@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -73,7 +72,7 @@ public class AdminRestaurantController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
+    @CacheEvict(value = {"restaurants", "restaurantWithDishes"}, allEntries = true)
     public void enable(@PathVariable int id, @RequestParam String name) {
         log.info("update restaurant {} with name {}", id, name);
         Restaurant restaurant = repository.getExisted(id);
