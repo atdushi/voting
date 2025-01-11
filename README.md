@@ -51,6 +51,20 @@ Admin: admin@gmail.com / admin
 Guest: guest@gmail.com / guest
 ```
 
+<details>
+  <summary>Swagger screenshots</summary>
+
+
+  ![](/images/screenshot1.png)
+  
+  ![](/images/screenshot2.png)
+  
+  ![](/images/screenshot3.png)
+
+
+</details>
+
+
 ---
 
 ## Expected UI
@@ -58,20 +72,20 @@ Guest: guest@gmail.com / guest
 <details>
   <summary>Admin Users</summary>
 
-  ![](/images/users.png)
+  ![Users](/images/users.png)
 
 </details>
 
 <details>
   <summary>Admin Restaurants and Dishes</summary>
 
-  ![](/images/restaurants.png)
+  ![Restaurants](/images/restaurants.png)
 
 </details>
 
 <details>
   <summary>Voting</summary>
 
-  ![](/images/voting.png)
+  ![Voting](/images/voting.png)
 
 </details>
