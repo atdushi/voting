@@ -14,11 +14,11 @@ import java.util.Optional;
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Query(value = """
-            select r.id, r.name, coalesce(cast(sum(v1.cnt) as int), 0) rating
+            select r.id, r.name, coalesce(sum(v1.cnt), 0) rating
             from restaurant r
             left join (select v.*, 1 cnt from vote v where v.vote_date = :date) v1 on v1.restaurant_id = r.id
             group by r.id, r.name
-            order by coalesce(cast(sum(v1.cnt) as int), 0) desc, r.name asc
+            order by coalesce(sum(v1.cnt), 0) desc, r.name asc
             """, nativeQuery = true)
     List<RestaurantWithRating> findByDateOrderByRatingDesc(LocalDate date);
 
