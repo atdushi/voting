@@ -1,11 +1,12 @@
 package com.github.atdushi.voting.web;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.github.atdushi.voting.View;
 import com.github.atdushi.voting.model.Dish;
+import com.github.atdushi.voting.model.Restaurant;
 import com.github.atdushi.voting.repository.DishRepository;
 import com.github.atdushi.voting.to.DishTo;
 import com.github.atdushi.voting.util.DishUtil;
-import com.github.atdushi.voting.View;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Objects;
 
 import static com.github.atdushi.common.validation.ValidationUtil.assureIdConsistent;
 import static com.github.atdushi.common.validation.ValidationUtil.checkNew;
@@ -38,6 +42,9 @@ public class AdminDishController {
     @Autowired
     private final DishRepository repository;
 
+    @Autowired
+    private final CacheManager cacheManager;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -50,14 +57,22 @@ public class AdminDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     @CacheEvict(value = "dishes", allEntries = true)
     public void update(@PathVariable int id, @Valid @JsonView(View.Update.class) @RequestBody DishTo dishTo) {
         log.info("update {}", dishTo);
         assureIdConsistent(dishTo, id);
+
         Dish existed = repository.getExisted(id);
         Dish newFromTo = DishUtil.createNewFromTo(dishTo);
-        newFromTo.setRestaurant(existed.getRestaurant());
+
+        Restaurant restaurant = existed.getRestaurant();
+
+        newFromTo.setRestaurant(restaurant);
         repository.save(newFromTo);
+
+        Cache restaurantWithDishes = cacheManager.getCache("restaurantWithDishes");
+        Objects.requireNonNull(restaurantWithDishes).evict(Objects.requireNonNull(restaurant.getId()));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +88,7 @@ public class AdminDishController {
         created.getRestaurant().setDishes(null);    // remove proxy
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL+ "/{id}")
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

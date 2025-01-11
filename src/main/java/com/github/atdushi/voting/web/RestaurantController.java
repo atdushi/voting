@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -48,12 +47,14 @@ public class RestaurantController {
             @Parameter(name = "date", description = "дата еды (по умолчанию - текущая)")
     })
     @GetMapping("/with-dishes")
-    @Transactional
-    public RestaurantTo get(
-            @RequestParam int restaurantId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
-        LocalDate dishDate = date.orElse(LocalDate.now());
-        log.info("get with dishes by id {}", restaurantId);
+    @Cacheable(
+            value = "restaurantWithDishes",
+            key = "#restaurantId",
+            condition="#date.isEmpty() || (#date.isPresent() && #date.get().isEqual(T(java.time.LocalDate).now()))")    // cache only today's dishes
+    public RestaurantTo getWithDishes(@RequestParam int restaurantId,
+                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date) {
+        LocalDate dishDate = date.orElseGet(LocalDate::now);
+        log.info("get with dishes by restaurantId {} and date {}", restaurantId, dishDate);
         Optional<Restaurant> withDishes = repository.findByIdAndDishesDate(restaurantId, dishDate);
         if (withDishes.isEmpty()) {
             throw new NotFoundException("Restaurant with id=" + restaurantId + " and dishes on " + dishDate + " not found");
