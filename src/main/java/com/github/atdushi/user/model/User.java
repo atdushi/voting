@@ -1,6 +1,7 @@
 package com.github.atdushi.user.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.atdushi.common.mapper.Default;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -59,6 +60,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
     }
 
+    @Default
     public User(Integer id, String name, String email, String password, Role... roles) {
         this(id, name, email, password, true, new Date(), Arrays.asList(roles));
     }
